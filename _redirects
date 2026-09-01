@@ -48,4 +48,11 @@
 /contact-us/                               /contact.html              301
 
 # Anything else that is not found
-/*                                         /404.html                  404
+#
+# Netlify handles a missing page with the rule below. Cloudflare rejects it —
+# it only accepts genuine redirect codes here (301, 302, 303, 307, 308), not
+# 404 — and does not need it: "not_found_handling": "404-page" in
+# wrangler.jsonc already serves 404.html for anything that does not exist.
+#
+# Left here, commented out, for anyone who later publishes this to Netlify.
+# /*                                       /404.html                  404
