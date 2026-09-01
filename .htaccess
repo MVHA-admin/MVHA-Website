@@ -1,0 +1,69 @@
+# ==========================================================================
+# Apache settings for the MVHA site.
+#
+# Only needed on a traditional Apache host (GoDaddy, cPanel, shared hosting).
+# Netlify and Cloudflare Pages read _redirects instead and ignore this file.
+#
+# Rebuilt automatically by tools/build.js — edit that, not this.
+# ==========================================================================
+
+DirectoryIndex index.html
+
+# ---- Redirects from the old WordPress addresses ----
+
+RewriteEngine On
+
+RedirectMatch 301 ^/about-the-association/?$ /about.html
+RedirectMatch 301 ^/our-history/?$ /our-history.html
+RedirectMatch 301 ^/mountain-view-history-center/?$ /history-center.html
+RedirectMatch 301 ^/history/?$ /history.html
+RedirectMatch 301 ^/mountain-view-history-timeline/?$ /timeline.html
+RedirectMatch 301 ^/castro-city-rengstorff-park/?$ /castro-legacy.html
+RedirectMatch 301 ^/historical-buildings-in-mountain-view-ca/?$ /landmarks.html
+RedirectMatch 301 ^/mvhs-eagle-monument/?$ /eagle-monument.html
+RedirectMatch 301 ^/useful_links/?$ /links.html
+RedirectMatch 301 ^/video-gallery/?$ /videos.html
+RedirectMatch 301 ^/events/?$ /events.html
+RedirectMatch 301 ^/oldest-living-resident/?$ /oldest-resident.html
+RedirectMatch 301 ^/get-involved/?$ /join.html
+RedirectMatch 301 ^/donate/?$ /donate.html
+RedirectMatch 301 ^/memberships/?$ /membership.html
+RedirectMatch 301 ^/volunteer/?$ /volunteer.html
+RedirectMatch 301 ^/newsletters/?$ /newsletters.html
+RedirectMatch 301 ^/archived-newsletters/?$ /newsletters.html
+RedirectMatch 301 ^/contact-us/?$ /contact.html
+RedirectMatch 301 ^/events/page/.*$ /events.html
+RedirectMatch 301 ^/eventbrite-event/.*$ /events.html
+
+# ---- Friendly error page ----
+
+ErrorDocument 404 /404.html
+
+# ---- Compression ----
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/javascript application/json image/svg+xml
+</IfModule>
+
+# ---- Caching ----
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css                "access plus 1 month"
+  ExpiresByType application/javascript  "access plus 1 month"
+  ExpiresByType image/jpeg              "access plus 1 year"
+  ExpiresByType image/png               "access plus 1 year"
+  ExpiresByType image/webp              "access plus 1 year"
+  ExpiresByType image/svg+xml           "access plus 1 year"
+  # JSON changes whenever the site is updated, so keep this short.
+  ExpiresByType application/json        "access plus 1 hour"
+  ExpiresByType text/html               "access plus 1 hour"
+</IfModule>
+
+# ---- Basic security headers ----
+
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set X-Frame-Options "SAMEORIGIN"
+</IfModule>

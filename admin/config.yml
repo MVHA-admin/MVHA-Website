@@ -1,0 +1,232 @@
+# ==========================================================================
+# What the admin panel at /admin can edit.
+# --------------------------------------------------------------------------
+# Each "collection" below becomes a section in the editing panel, and each
+# "field" becomes a box on a form. Saving writes the change back to the file
+# named in the collection, exactly as if you had edited it by hand — so
+# nothing here is a database, and every edit keeps its own history.
+#
+# TWO THINGS MUST BE FILLED IN BEFORE THIS WORKS. Both are marked CHANGE ME.
+# See SETUP-CMS.md in the main folder for how to get each one.
+# ==========================================================================
+
+backend:
+  name: github
+  repo: CHANGE-ME/mvha-website        # CHANGE ME — your GitHub username/repo
+  branch: main
+  base_url: https://CHANGE-ME.workers.dev   # CHANGE ME — your login worker
+  commit_messages:
+    create: 'Add {{collection}} “{{slug}}”'
+    update: 'Update {{collection}} “{{slug}}”'
+    delete: 'Delete {{collection}} “{{slug}}”'
+    uploadMedia: 'Upload {{path}}'
+    deleteMedia: 'Delete {{path}}'
+
+# Where uploaded pictures are stored, and how pages should refer to them.
+media_folder: assets/images
+public_folder: assets/images
+
+# Show an "In preview" link that opens the real page.
+site_url: https://www.mountainviewhistorical.org
+display_url: https://www.mountainviewhistorical.org
+logo_url: https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/MVHA-Logo-300x300.jpg
+
+# Editors write in their own language of the interface; content stays as typed.
+locale: en
+
+collections:
+
+  # ------------------------------------------------------------------
+  # News & Stories — one Markdown file per post.
+  # ------------------------------------------------------------------
+  - name: posts
+    label: News & Stories
+    label_singular: Post
+    folder: tools/content/posts
+    create: true
+    delete: true
+    extension: md
+    format: frontmatter
+    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
+    summary: '{{title}} — {{date | date("MMM D, YYYY")}}'
+    sortable_fields: [date, title]
+    view_groups:
+      - label: Year
+        field: date
+        pattern: \d{4}
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: date, label: Date published, widget: datetime, date_format: 'YYYY-MM-DD', time_format: false, picker_utc: true }
+      - name: author
+        label: Written by
+        widget: string
+        required: false
+        default: Mountain View Historical Association
+      - name: summary
+        label: Summary
+        widget: text
+        hint: One or two sentences. This is what shows on the News page and in Google results.
+      - name: image
+        label: Main picture
+        widget: image
+        required: false
+        hint: Optional. Shown at the top of the post and beside it in the listing.
+      - name: draft
+        label: Keep as a draft
+        widget: boolean
+        default: false
+        required: false
+        hint: Tick this to save your work without publishing it. Untick when you are ready.
+      - name: body
+        label: The post
+        widget: markdown
+        hint: Use the toolbar for headings, bold, links and pictures.
+
+  # ------------------------------------------------------------------
+  # Events — a single file with several lists inside it.
+  # ------------------------------------------------------------------
+  - name: events
+    label: Events
+    files:
+      - name: events
+        label: Events
+        file: data/events.json
+        description: Upcoming and past events, the annual community calendar, and the record of earlier quarterly programmes.
+        fields:
+          - name: _comment
+            label: Note to editors
+            widget: hidden
+            default: "Events. Add upcoming events to 'upcoming' and move them to 'past' once they have happened. 'date' must be YYYY-MM-DD. 'endDate' is optional. 'registerUrl' is optional — leave it as an empty string to hide the Register button. The page sorts by date automatically and will move an event out of 'upcoming' on screen once the date passes, so you don't have to do it the same day."
+
+          - name: registrationUrl
+            label: Eventbrite page
+            widget: string
+            hint: Used by the "Register on Eventbrite" buttons.
+
+          - name: upcoming
+            label: Upcoming events
+            label_singular: Event
+            widget: list
+            required: false
+            summary: '{{fields.date}} — {{fields.title}}'
+            hint: The site moves an event to "past" on its own once the date has gone by, so there is no rush to tidy up.
+            fields:
+              - { name: id, label: Short name (no spaces), widget: string, pattern: ['^[a-z0-9-]+$', 'Lower-case letters, numbers and hyphens only'] }
+              - { name: title, label: Title, widget: string }
+              - { name: date, label: Date, widget: datetime, date_format: 'YYYY-MM-DD', time_format: false, picker_utc: true }
+              - { name: time, label: Time, widget: string, required: false, hint: 'For example: 1:00 – 3:00 PM' }
+              - { name: venue, label: Venue, widget: string, required: false }
+              - { name: address, label: Address, widget: string, required: false }
+              - { name: description, label: Description, widget: text, required: false }
+              - { name: registerUrl, label: Registration link, widget: string, required: false, default: '' }
+              - { name: image, label: Flyer or photo, widget: image, required: false }
+
+          - name: past
+            label: Past events
+            label_singular: Event
+            widget: list
+            required: false
+            collapsed: true
+            summary: '{{fields.date}} — {{fields.title}}'
+            fields:
+              - { name: id, label: Short name (no spaces), widget: string }
+              - { name: title, label: Title, widget: string }
+              - { name: date, label: Date, widget: datetime, date_format: 'YYYY-MM-DD', time_format: false, picker_utc: true }
+              - { name: time, label: Time, widget: string, required: false }
+              - { name: venue, label: Venue, widget: string, required: false }
+              - { name: address, label: Address, widget: string, required: false }
+              - { name: description, label: Description, widget: text, required: false }
+              - { name: registerUrl, label: Registration link, widget: string, required: false }
+              - { name: image, label: Flyer or photo, widget: image, required: false }
+
+          - name: annual
+            label: Annual community events
+            label_singular: Event
+            widget: list
+            required: false
+            summary: '{{fields.title}} ({{fields.when}})'
+            fields:
+              - { name: title, label: Title, widget: string }
+              - { name: when, label: When, widget: string, hint: 'For example: September, or Spring, summer & fall' }
+
+          - name: archive
+            label: Past quarterly programmes
+            label_singular: Year
+            widget: list
+            required: false
+            collapsed: true
+            summary: '{{fields.year}}'
+            fields:
+              - { name: year, label: Year, widget: number, value_type: int }
+              - name: items
+                label: Events that year
+                label_singular: Event
+                widget: list
+                field: { name: item, label: Description, widget: text }
+
+  # ------------------------------------------------------------------
+  # Photographs
+  # ------------------------------------------------------------------
+  - name: photos
+    label: Photographs
+    files:
+      - name: photos
+        label: Photo archive
+        file: data/photos.json
+        description: The photographs on the archive page. Add the topic first if the one you need is not in the list.
+        fields:
+          - name: _comment
+            label: Note to editors
+            widget: hidden
+            default: "Photo archive. To add a photo: copy a block, change the values. 'src' can be a full web address or a local path like assets/images/my-photo.jpg. 'decade' drives the decade filter — use a 4-digit decade (e.g. 1950) or 'unknown'. 'topic' drives the topic filter and must match one of the topics listed below."
+
+          - name: topics
+            label: Topics
+            label_singular: Topic
+            widget: list
+            field: { name: topic, label: Topic, widget: string }
+            hint: These are the filter buttons on the archive page. Add a topic here before using it on a photograph.
+
+          - name: photos
+            label: Photographs
+            label_singular: Photograph
+            widget: list
+            summary: '{{fields.title}} ({{fields.date}})'
+            fields:
+              - { name: id, label: Short name (no spaces), widget: string, pattern: ['^[a-z0-9-]+$', 'Lower-case letters, numbers and hyphens only'] }
+              - { name: title, label: What it shows, widget: string }
+              - { name: date, label: Date, widget: string, hint: 'Free text — for example: circa 1953' }
+              - { name: decade, label: Decade, widget: number, value_type: int, hint: 'A four-digit decade: 1880, 1950. Drives the decade filter.' }
+              - { name: topic, label: Topic, widget: string, hint: Must match one of the topics listed above, exactly. }
+              - { name: caption, label: Caption, widget: text }
+              - { name: src, label: The picture, widget: image }
+              - { name: credit, label: Credit, widget: string, required: false, hint: 'Optional — for example: Photo by Jane Smith' }
+
+  # ------------------------------------------------------------------
+  # Board of Directors
+  # ------------------------------------------------------------------
+  - name: board
+    label: Board of Directors
+    files:
+      - name: board
+        label: Board of Directors
+        file: data/board.json
+        description: The names, roles and biographies shown on the About page. Drag to reorder — the order here is the order on the page.
+        fields:
+          - name: _comment
+            label: Note to editors
+            widget: hidden
+            default: "Board of Directors. Order in this list is the order shown on the About page. Leave 'photo' empty to show a placeholder."
+
+          - { name: term, label: Term, widget: string, hint: 'Shown above the list — for example: 2023–24' }
+
+          - name: members
+            label: Members
+            label_singular: Member
+            widget: list
+            summary: '{{fields.name}} — {{fields.role}}'
+            fields:
+              - { name: name, label: Name, widget: string }
+              - { name: role, label: Role, widget: string }
+              - { name: bio, label: Biography, widget: text }
+              - { name: photo, label: Photograph, widget: image, required: false, hint: Leave empty to show a plain placeholder. }

@@ -1,0 +1,146 @@
+#!/usr/bin/env node
+/* ==========================================================================
+   MVHA site checker
+   --------------------------------------------------------------------------
+   Sanity checks the built site without needing a browser:
+     - every internal link points at a file that exists
+     - every local asset (css, js, images) exists
+     - every JSON data file parses
+     - every page has a title, description, h1 and skip link
+     - flags images with no alt attribute
+
+   Run it with:   node tools/check.js
+   ========================================================================== */
+
+const fs = require('fs');
+const path = require('path');
+
+const ROOT = path.resolve(__dirname, '..');
+let errors = 0, warnings = 0;
+
+const fail = m => { console.log('  FAIL  ' + m); errors++; };
+const warn = m => { console.log('  warn  ' + m); warnings++; };
+
+/* ---- 1. JSON data files ---- */
+
+console.log('\nChecking data files');
+const dataDir = path.join(ROOT, 'data');
+for (const f of fs.readdirSync(dataDir).filter(f => f.endsWith('.json'))) {
+  try {
+    JSON.parse(fs.readFileSync(path.join(dataDir, f), 'utf8'));
+    console.log('  ok    data/' + f);
+  } catch (e) {
+    fail(`data/${f} is not valid JSON — ${e.message}`);
+  }
+}
+
+/* ---- 2. Pages ---- */
+
+console.log('\nChecking pages');
+const pages = fs.readdirSync(ROOT).filter(f => f.endsWith('.html'));
+
+for (const page of pages) {
+  const html = fs.readFileSync(path.join(ROOT, page), 'utf8');
+  const issues = [];
+
+  if (!/<title>[^<]+<\/title>/.test(html)) issues.push('no <title>');
+  if (!/<meta name="description" content="[^"]+"/.test(html)) issues.push('no meta description');
+  if (!/<h1[\s>]/.test(html)) issues.push('no <h1>');
+  if (!/class="skip-link"/.test(html)) issues.push('no skip link');
+  if (!/lang="en"/.test(html)) issues.push('no lang attribute');
+
+  // Internal links
+  const hrefs = [...html.matchAll(/href="([^"]+)"/g)].map(m => m[1]);
+  for (const href of hrefs) {
+    if (/^(https?:|mailto:|tel:|#)/.test(href)) continue;
+    const target = href.split('#')[0].split('?')[0];
+    if (!target) continue;
+    if (!fs.existsSync(path.join(ROOT, target))) {
+      issues.push(`broken link → ${target}`);
+    }
+  }
+
+  // Local assets in src=
+  const srcs = [...html.matchAll(/src="([^"]+)"/g)].map(m => m[1]);
+  for (const src of srcs) {
+    if (/^(https?:|data:|\/\/)/.test(src)) continue;
+    // Assets carry a ?v=hash so a new release is not served from cache. The
+    // query is not part of the filename, so drop it before looking on disk.
+    const file = src.split('#')[0].split('?')[0];
+    if (!fs.existsSync(path.join(ROOT, file))) {
+      issues.push(`missing asset → ${src}`);
+    }
+  }
+
+  // Images without alt
+  const imgs = [...html.matchAll(/<img\b[^>]*>/g)].map(m => m[0]);
+  const noAlt = imgs.filter(t => !/\balt=/.test(t));
+  if (noAlt.length) issues.push(`${noAlt.length} <img> without alt`);
+
+  if (issues.length) {
+    console.log('  --    ' + page);
+    issues.forEach(i => (i.startsWith('broken') || i.startsWith('missing') ? fail('        ' + i) : warn('        ' + i)));
+  } else {
+    console.log('  ok    ' + page);
+  }
+}
+
+/* ---- 3. Cross-check the search index against real pages ---- */
+
+console.log('\nChecking search index');
+const idx = JSON.parse(fs.readFileSync(path.join(dataDir, 'pages.json'), 'utf8'));
+const indexed = new Set(idx.pages.map(p => p.url));
+for (const p of idx.pages) {
+  if (!fs.existsSync(path.join(ROOT, p.url))) fail(`pages.json lists ${p.url}, which does not exist`);
+}
+for (const page of pages) {
+  if (page === '404.html' || page === 'search.html') continue;
+  if (!indexed.has(page)) warn(`${page} is not in data/pages.json, so site search will not find it`);
+}
+if (!errors) console.log('  ok    search index matches the built pages');
+
+/* ---- 4. Photo data sanity ---- */
+
+console.log('\nChecking photo archive data');
+const photos = JSON.parse(fs.readFileSync(path.join(dataDir, 'photos.json'), 'utf8'));
+const ids = new Set();
+for (const p of photos.photos) {
+  if (!p.id) fail('a photo has no id');
+  if (ids.has(p.id)) fail(`duplicate photo id: ${p.id}`);
+  ids.add(p.id);
+  if (!p.src) fail(`photo ${p.id} has no src`);
+  if (!p.title) fail(`photo ${p.id} has no title`);
+  if (p.topic && photos.topics && !photos.topics.includes(p.topic)) {
+    warn(`photo ${p.id} uses topic "${p.topic}" which is not in the topics list`);
+  }
+}
+console.log(`  ok    ${photos.photos.length} photographs, ${ids.size} unique ids`);
+
+/* ---- 5. Newsletter data ---- */
+
+console.log('\nChecking newsletter archive data');
+const news = JSON.parse(fs.readFileSync(path.join(dataDir, 'newsletters.json'), 'utf8'));
+const newsIds = new Set();
+let fullText = 0;
+const unindexed = [];
+for (const i of news.issues) {
+  if (!i.id) fail('a newsletter issue has no id');
+  if (newsIds.has(i.id)) fail(`duplicate newsletter id: ${i.id}`);
+  newsIds.add(i.id);
+  if (!i.url) fail(`issue ${i.id} has no url`);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(i.date || '')) fail(`issue ${i.id} has a bad date (need YYYY-MM-DD)`);
+  if (i.text && i.text.length > 200) fullText++; else unindexed.push(i.title);
+}
+const noBullets = news.issues.filter(i => !(i.highlights || []).length).map(i => i.title);
+console.log(`  ok    ${news.issues.length} issues listed, ${fullText} full-text searchable, ` +
+            `${news.issues.length - noBullets.length} with a contents list`);
+if (unindexed.length || noBullets.length) {
+  const n = new Set([...unindexed, ...noBullets]).size;
+  warn(`${n} issue(s) still incomplete — run Launchers/Index Newsletters.command`);
+}
+
+/* ---- Summary ---- */
+
+console.log('\n' + '-'.repeat(50));
+console.log(errors ? `${errors} error(s), ${warnings} warning(s)` : `No errors. ${warnings} warning(s).`);
+process.exit(errors ? 1 : 0);

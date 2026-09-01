@@ -1,0 +1,578 @@
+#!/usr/bin/env python3
+"""
+Newsletter indexer (Python version)
+-----------------------------------------------------------------------------
+Reads every issue of The Mountain ReView listed in data/newsletters.json,
+pulls the text out of each PDF, and writes it back into the same file. That
+text is what makes the newsletters findable through the site's search box.
+
+It also works out each issue's contents by measuring type size: whatever size
+most of the page is set in is the body copy, and anything meaningfully bigger
+is treated as an article heading. Those headings become the bullet list shown
+under each issue on the archive page.
+
+A contents list you have written or edited by hand is never overwritten.
+
+USAGE
+    python3 tools/index_newsletters.py               index anything new
+    python3 tools/index_newsletters.py --all         re-read everything
+    python3 tools/index_newsletters.py --discover    also look for issues
+                                                     not yet listed
+    python3 tools/index_newsletters.py --diagnose ID explain what it sees
+                                                     inside one issue
+
+It needs one small library, pypdf. The Index Newsletters launcher installs it
+for you in a private folder. To do it by hand:
+
+    python3 -m venv .venv
+    .venv/bin/pip install pypdf
+    .venv/bin/python tools/index_newsletters.py
+
+WHERE IT GETS THE PDFs
+Each issue in data/newsletters.json has a "url". Full web addresses are
+downloaded; anything else is treated as a path on your own computer, so
+"newsletters/Summer-2026.pdf" works too.
+"""
+
+import json
+import os
+import re
+import sys
+import urllib.request
+import urllib.error
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA = os.path.join(ROOT, "data", "newsletters.json")
+WP = "https://www.mountainviewhistorical.org"
+
+FORCE = "--all" in sys.argv
+DISCOVER = "--discover" in sys.argv
+
+UA = {"User-Agent": "MVHA-newsletter-indexer/1.0"}
+
+
+# ---------------------------------------------------------------- pypdf ----
+
+def load_pypdf():
+    try:
+        from pypdf import PdfReader
+        return PdfReader
+    except ImportError:
+        pass
+    try:
+        from PyPDF2 import PdfReader          # older name, still common
+        return PdfReader
+    except ImportError:
+        pass
+    sys.exit(
+        "\n  The PDF reader is not installed.\n\n"
+        "  Double-click Launchers/Index Newsletters.command, which sets it up\n"
+        "  for you, or run these two lines in this folder:\n\n"
+        "      python3 -m venv .venv\n"
+        "      .venv/bin/pip install pypdf\n\n"
+        "  then run:\n\n"
+        "      .venv/bin/python tools/index_newsletters.py\n"
+    )
+
+
+# --------------------------------------------------------------- helpers ----
+
+# Typesetters use single glyphs for pairs like "fi", which come out of a PDF as
+# one character. Left alone, a search for "benefits" would miss "beneﬁts".
+LIGATURES = {
+    "ﬀ": "ff", "ﬁ": "fi", "ﬂ": "fl", "ﬃ": "ffi", "ﬄ": "ffl",
+    "ﬅ": "ft", "ﬆ": "st", "Æ": "AE", "æ": "ae", "Œ": "OE", "œ": "oe",
+}
+
+
+def tidy(text):
+    """Turn raw PDF text into something worth searching."""
+    for glyph, plain in LIGATURES.items():
+        text = text.replace(glyph, plain)
+    text = text.replace("­", "")            # soft hyphens
+    text = re.sub(r"-\s*\n\s*", "", text)        # words split across lines
+    text = re.sub(r"\s*\n\s*", " ", text)        # line breaks to spaces
+    text = re.sub(r"\s{2,}", " ", text)          # collapse runs of spaces
+    text = text.replace("‘", "'").replace("’", "'")
+    text = text.replace("“", '"').replace("”", '"')
+    return text.strip()
+
+
+def dedupe(issues):
+    """
+    The old WordPress media library holds several issues twice, uploaded under
+    slightly different filenames. Keep one entry per issue.
+
+    We prefer the copy that already has text, then the one whose filename looks
+    like the original rather than a re-upload (WordPress adds -1, -2 and so on).
+    """
+    best = {}
+    order = []
+    dropped = []
+
+    def score(issue):
+        url = issue.get("url", "")
+        name = url.rsplit("/", 1)[-1]
+        return (
+            1 if len(issue.get("text") or "") > 200 else 0,
+            1 if issue.get("highlights") else 0,
+            0 if re.search(r"-\d+\.pdf$", name, re.I) else 1,   # not a re-upload
+        )
+
+    for issue in issues:
+        key = issue.get("id")
+        if key not in best:
+            best[key] = issue
+            order.append(key)
+            continue
+        if score(issue) > score(best[key]):
+            dropped.append(best[key])
+            best[key] = issue
+        else:
+            dropped.append(issue)
+
+    return [best[k] for k in order], dropped
+
+
+def get_bytes(source):
+    if source.startswith(("http://", "https://")):
+        req = urllib.request.Request(source, headers=UA)
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            return resp.read()
+    path = source if os.path.isabs(source) else os.path.join(ROOT, source)
+    if not os.path.exists(path):
+        raise FileNotFoundError("file not found: %s" % source)
+    with open(path, "rb") as fh:
+        return fh.read()
+
+
+# Lines we never want to offer as a "contents" bullet: mastheads, addresses,
+# standing furniture that appears in every single issue.
+BOILERPLATE = re.compile(
+    r"^(the\s+)?mountain\s+re-?view$"
+    r"|mountain\s+view\s+historical\s+association"
+    r"|^p\.?\s*o\.?\s*box"
+    r"|^www\.|^http|@|\.org$|\.com$"
+    r"|^volume\b|^issue\b|^page\b"
+    r"|^first[- ]class|^calendar\b|^mark your calendar$"
+    r"|^join the conversation|^like us|^on the cover$"
+    r"|^(winter|spring|summer|fall|autumn)\s+\d{4}$"
+    r"|^\d[\d\s.,:/-]*$",
+    re.I,
+)
+
+
+def clean_heading(text):
+    text = re.sub(r"\s+", " ", text).strip(" —-–—·•,:;")
+    # Headings set in all caps read badly in a list; give them title case.
+    letters = [c for c in text if c.isalpha()]
+    if letters and sum(1 for c in letters if c.isupper()) / len(letters) > 0.85:
+        text = text.title()
+    return text.strip()
+
+
+def plausible_heading(line):
+    """Shared sanity checks for anything we are thinking of calling a heading."""
+    if not (4 <= len(line) <= 90):
+        return False
+    words = line.split()
+    if not (2 <= len(words) <= 14):
+        return False
+    if BOILERPLATE.search(line):
+        return False
+    # Mostly letters, not a string of numbers or punctuation.
+    if sum(c.isalpha() for c in line) < len(line) * 0.6:
+        return False
+    # Headings do not end mid-sentence.
+    if line.rstrip()[-1:] in ".,;:":
+        return False
+    return True
+
+
+def collect_spans(reader):
+    """
+    Return (effective type size, text) for every run of text in the document.
+
+    The size a PDF reports in its font operator is not always the size you see.
+    Page-layout programs such as InDesign routinely set the font at size 1 and
+    put the real scale in the text matrix, so every line claims to be size 1.
+    Multiply the two to get what a reader actually sees on the page.
+    """
+    spans = []
+
+    for page in reader.pages:
+        parts = []
+
+        def visitor(text, cm, tm, font_dict, font_size):
+            if not text or not text.strip():
+                return
+            try:
+                size = float(font_size)
+            except (TypeError, ValueError):
+                return
+            scale = 1.0
+            try:
+                if tm and len(tm) >= 4 and tm[3]:
+                    scale = abs(float(tm[3]))
+            except (TypeError, ValueError, IndexError):
+                scale = 1.0
+            effective = round(size * scale, 1)
+            if effective <= 0:
+                return
+            parts.append((effective, text))
+
+        try:
+            page.extract_text(visitor_text=visitor)
+        except Exception:
+            continue
+
+        # Join neighbouring pieces set at the same size into one line.
+        for size, text in parts:
+            if spans and spans[-1][0] == size:
+                spans[-1] = (size, spans[-1][1] + text)
+            else:
+                spans.append((size, text))
+
+    return spans
+
+
+def headings_by_size(spans):
+    """Headlines are the lines set noticeably larger than the body copy."""
+    if not spans:
+        return []
+
+    weight = {}
+    for size, text in spans:
+        weight[size] = weight.get(size, 0) + len(text.strip())
+    if not weight:
+        return []
+    body = max(weight, key=weight.get)
+
+    found, seen = [], set()
+    for size, text in spans:
+        if size < body * 1.25:
+            continue
+        line = clean_heading(text)
+        if not plausible_heading(line):
+            continue
+        key = line.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        found.append((size, line))
+
+    # Biggest type first — that tends to be the lead story.
+    found.sort(key=lambda h: -h[0])
+    return [line for _size, line in found[:7]]
+
+
+def headings_by_style(raw_pages):
+    """
+    Fallback for PDFs whose type sizes are unreadable: look at how lines are
+    written instead. Headlines are short, capitalised and unpunctuated.
+    """
+    found, seen = [], set()
+
+    for page_text in raw_pages:
+        for raw in (page_text or "").splitlines():
+            line = clean_heading(raw)
+            if not plausible_heading(line):
+                continue
+            words = [w for w in line.split() if w[:1].isalpha()]
+            if not words:
+                continue
+            capitalised = sum(1 for w in words if w[:1].isupper())
+            if capitalised / len(words) < 0.7:
+                continue
+            key = line.lower()
+            if key in seen:
+                continue
+            seen.add(key)
+            found.append(line)
+
+    return found[:7]
+
+
+def find_headings(reader, raw_pages):
+    spans = collect_spans(reader)
+    found = headings_by_size(spans)
+    if len(found) >= 2:
+        return found, "type size"
+    fallback = headings_by_style(raw_pages)
+    if len(fallback) > len(found):
+        return fallback, "wording"
+    return found, "type size"
+
+
+def extract_text(source, PdfReader):
+    import io
+    data = get_bytes(source)
+    reader = PdfReader(io.BytesIO(data))
+
+    pages = []
+    for page in reader.pages:
+        try:
+            pages.append(page.extract_text() or "")
+        except Exception:
+            pages.append("")
+
+    try:
+        headings, how = find_headings(reader, pages)
+    except Exception:
+        headings, how = [], "none"
+
+    return tidy("\n".join(pages)), len(reader.pages), headings, how
+
+
+# -------------------------------------------------------------- discover ----
+
+SEASON_MONTH = {"winter": "01", "spring": "04", "summer": "07",
+                "fall": "10", "autumn": "10"}
+
+
+def discover(existing):
+    print("  Asking the old WordPress site for newsletter PDFs...\n")
+    found = {}
+
+    for term in ("ReView", "Review", "newsletter", "Mtn"):
+        for page in range(1, 4):
+            url = ("%s/wp-json/wp/v2/media/?search=%s&per_page=60&page=%d"
+                   "&_fields%%5B%%5D=source_url" % (WP, term, page))
+            try:
+                req = urllib.request.Request(url, headers=UA)
+                with urllib.request.urlopen(req, timeout=60) as resp:
+                    items = json.loads(resp.read().decode("utf-8"))
+            except Exception:
+                break
+            if not isinstance(items, list) or not items:
+                break
+            for item in items:
+                src = item.get("source_url", "")
+                if not src.lower().endswith(".pdf"):
+                    continue
+                if not re.search(r"re-?view|newsletter", src, re.I):
+                    continue
+                found[src] = True
+
+    known = {i.get("url") for i in existing}
+    known_ids = {i.get("id") for i in existing}
+    added = []
+
+    for url in found:
+        if url in known:
+            continue
+        name = urllib.parse.unquote(url.rsplit("/", 1)[-1])
+        season = re.search(r"winter|spring|summer|fall|autumn", name, re.I)
+        year = re.search(r"(?:19|20)\d{2}", name)
+        if not season or not year:
+            print("  ?  could not read a season/year from %s "
+                  "— add it by hand if you want it" % name)
+            continue
+        s = season.group(0).capitalize()
+        y = year.group(0)
+        new_id = "%s-%s" % (s.lower(), y)
+
+        # The same issue often sits in the media library more than once under
+        # different filenames. One entry per issue is enough.
+        if new_id in known_ids:
+            continue
+        known_ids.add(new_id)
+
+        added.append({
+            "id": new_id,
+            "title": "%s %s" % (s, y),
+            "date": "%s-%s-01" % (y, SEASON_MONTH[s.lower()]),
+            "url": url,
+            "highlights": [],
+            "text": "",
+        })
+
+    return added
+
+
+# ------------------------------------------------------------------ main ----
+
+def diagnose(issue_id, PdfReader):
+    """Show what the indexer sees inside one issue, to explain a poor result."""
+    with open(DATA, encoding="utf-8") as fh:
+        store = json.load(fh)
+
+    match = next((i for i in store.get("issues", [])
+                  if i.get("id") == issue_id or i.get("title") == issue_id), None)
+    if not match:
+        ids = ", ".join(i.get("id", "?") for i in store.get("issues", [])[:8])
+        sys.exit("  No issue with id %r. The first few are: %s" % (issue_id, ids))
+
+    import io
+    print("\n  Looking inside %s\n  %s\n" % (match["title"], match["url"]))
+    reader = PdfReader(io.BytesIO(get_bytes(match["url"])))
+
+    spans = collect_spans(reader)
+    if not spans:
+        print("  No text runs found at all. This is probably a scanned PDF.")
+        return
+
+    weight = {}
+    for size, text in spans:
+        weight[size] = weight.get(size, 0) + len(text.strip())
+    body = max(weight, key=weight.get)
+
+    print("  Type sizes found, by how much text is set in them:")
+    for size in sorted(weight, key=weight.get, reverse=True)[:12]:
+        marker = "  <- body copy" if size == body else ""
+        print("     %6.1f pt  %6d characters%s" % (size, weight[size], marker))
+
+    print("\n  Anything above %.1f pt is treated as a heading.\n" % (body * 1.25))
+
+    by_size = headings_by_size(spans)
+    print("  From type size (%d):" % len(by_size))
+    for h in by_size:
+        print("     • %s" % h)
+
+    raw = []
+    for page in reader.pages:
+        try:
+            raw.append(page.extract_text() or "")
+        except Exception:
+            raw.append("")
+    by_style = headings_by_style(raw)
+    print("\n  From wording, the fallback (%d):" % len(by_style))
+    for h in by_style:
+        print("     • %s" % h)
+
+    print("\n  The indexer uses whichever of those two gives more, and never")
+    print("  overwrites a contents list you have edited yourself.\n")
+
+
+def main():
+    if not os.path.exists(DATA):
+        sys.exit("  data/newsletters.json is missing.")
+
+    PdfReader = load_pypdf()
+
+    if "--diagnose" in sys.argv:
+        idx = sys.argv.index("--diagnose")
+        if idx + 1 >= len(sys.argv):
+            sys.exit("  Usage: --diagnose <issue-id>, for example --diagnose winter-2026")
+        diagnose(sys.argv[idx + 1], PdfReader)
+        return
+
+    with open(DATA, encoding="utf-8") as fh:
+        store = json.load(fh)
+    store.setdefault("issues", [])
+
+    print("\n  " + "─" * 60)
+    print("   Indexing The Mountain ReView")
+    print("  " + "─" * 60 + "\n")
+
+    if DISCOVER:
+        added = discover(store["issues"])
+        if added:
+            store["issues"].extend(added)
+            for a in added:
+                print("  +  found %s" % a["title"])
+            print("\n  Added %d issue(s) to data/newsletters.json.\n" % len(added))
+        else:
+            print("  No issues found that were not already listed.\n")
+
+    # Remove any issue listed twice, then re-clean existing text so that
+    # improvements to the tidy-up (ligatures and so on) reach older entries
+    # without having to download every PDF again.
+    store["issues"], dropped = dedupe(store["issues"])
+    if dropped:
+        for d in dropped:
+            print("  -  removed a duplicate of %s (%s)"
+                  % (d.get("title"), d.get("url", "").rsplit("/", 1)[-1]))
+        print()
+
+    retidied = 0
+    for issue in store["issues"]:
+        old = issue.get("text") or ""
+        if old:
+            new = tidy(old)
+            if new != old:
+                issue["text"] = new
+                issue["words"] = len(new.split())
+                retidied += 1
+    if retidied:
+        print("  Tidied the text of %d existing issue(s).\n" % retidied)
+
+    store["issues"].sort(key=lambda i: i.get("date", ""), reverse=True)
+
+    done = skipped = failed = 0
+
+    for issue in store["issues"]:
+        title = issue.get("title", issue.get("id", "untitled"))
+
+        has_text = len(issue.get("text") or "") > 200
+        has_bullets = bool(issue.get("highlights"))
+
+        # Nothing to do only when we have both the text and the contents list.
+        if has_text and has_bullets and not FORCE:
+            skipped += 1
+            continue
+        if not issue.get("url"):
+            print("  !   %s has no url, skipped" % title)
+            failed += 1
+            continue
+
+        sys.stdout.write("  ... %s" % title)
+        sys.stdout.flush()
+        try:
+            text, pages, headings, how = extract_text(issue["url"], PdfReader)
+        except Exception as err:
+            print("\r  !   %s — %s" % (title, err))
+            failed += 1
+            continue
+
+        if len(text) < 200:
+            print("\r  !   %s — only %d characters of text." % (title, len(text)))
+            print("      This issue is probably a scan rather than a text PDF,")
+            print("      so it would need OCR before it can be searched.")
+            failed += 1
+            continue
+
+        issue["text"] = text
+        issue["pages"] = pages
+        issue["words"] = len(text.split())
+
+        # Never overwrite a contents list someone has written or edited by hand.
+        if headings and not has_bullets:
+            issue["highlights"] = headings
+
+        n_bullets = len(issue.get("highlights") or [])
+        note = ""
+        if n_bullets == 0:
+            note = " — no contents found, run with --diagnose %s to see why" % issue.get("id", "")
+        elif not has_bullets:
+            note = " (from %s)" % how
+        print("\r  ok  %s — %d pages, %s words, %d contents lines%s"
+              % (title, pages, format(issue["words"], ","), n_bullets, note))
+        done += 1
+
+    with open(DATA, "w", encoding="utf-8") as fh:
+        json.dump(store, fh, indent=2, ensure_ascii=False)
+        fh.write("\n")
+
+    searchable = sum(1 for i in store["issues"] if len(i.get("text") or "") > 200)
+    listed = sum(1 for i in store["issues"] if i.get("highlights"))
+    words = sum(i.get("words", 0) for i in store["issues"])
+
+    print("\n  " + "─" * 60)
+    print("   %d newly indexed, %d already done, %d could not be read"
+          % (done, skipped, failed))
+    print("   %d of %d issues are now searchable%s"
+          % (searchable, len(store["issues"]),
+             (" (%s words)" % format(words, ",")) if words else ""))
+    print("   %d of %d have a contents list on the archive page"
+          % (listed, len(store["issues"])))
+    print("  " + "─" * 60 + "\n")
+
+    if failed:
+        print("  Issues that could not be read are still listed on the site and")
+        print("  still open as PDFs — they just will not turn up in a search.\n")
+
+
+if __name__ == "__main__":
+    import urllib.parse  # noqa: F401  (used inside discover)
+    main()

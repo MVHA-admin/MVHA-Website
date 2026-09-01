@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# The editing panel is for volunteers, not for search engines.
+Disallow: /admin/
+
+Sitemap: https://www.mountainviewhistorical.org/sitemap.xml

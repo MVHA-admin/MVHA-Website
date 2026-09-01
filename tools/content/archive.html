@@ -1,0 +1,77 @@
+<!--META
+{
+  "title": "Photo Archive",
+  "description": "Browse historical photographs of Mountain View, California from the Mountain View Historical Association archive. Filter by decade and topic, or search by keyword.",
+  "image": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/Downtown-Mountain-Views-Castro-Street-in-1953.jpg"
+}
+-->
+
+<section class="pagehead">
+  <div class="wrap">
+    <p class="breadcrumb"><a href="index.html">Home</a><span>&rsaquo;</span><a href="history.html">History</a><span>&rsaquo;</span>Photo Archive</p>
+    <h1>Photo Archive</h1>
+    <p>Photographs from the Association&rsquo;s collection and the Mountain View History Center. Search by keyword, or narrow by decade and topic. Select any photograph to see it larger.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+
+    <div class="archive-toolbar">
+      <div class="field">
+        <label for="archive-q">Search photographs</label>
+        <input type="search" id="archive-q" data-archive-search placeholder="e.g. Castro, depot, orchard">
+      </div>
+      <div class="field">
+        <label for="archive-decade">Decade</label>
+        <select id="archive-decade" data-archive-decade>
+          <option value="">All decades</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="archive-topic">Topic</label>
+        <select id="archive-topic" data-archive-topic>
+          <option value="">All topics</option>
+        </select>
+      </div>
+      <p class="result-count" data-archive-count></p>
+    </div>
+
+    <h2 class="visually-hidden">Photographs</h2>
+    <div class="gallery" data-gallery>
+      <p>Loading the archive&hellip;</p>
+    </div>
+
+  </div>
+</section>
+
+<section class="section section--tint">
+  <div class="wrap">
+    <div class="grid grid-2">
+      <div class="card"><div class="card-body">
+        <h3>Looking for more?</h3>
+        <p>Many more photographs from the Mountain View History Center have been digitised and are searchable through the University of California&rsquo;s Calisphere website.</p>
+        <a class="btn btn--ghost" href="https://calisphere.org/collections/27188/" target="_blank" rel="noopener">Search Calisphere</a>
+      </div></div>
+      <div class="card"><div class="card-body">
+        <h3>Have a photograph to share?</h3>
+        <p>We are always looking to add to the archive. If you have photographs, documents or artifacts of local historical significance, we would like to hear from you.</p>
+        <a class="btn btn--ghost" href="donate.html">Donate to the archive</a>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photograph viewer">
+  <button class="lightbox-close" type="button" aria-label="Close">&times;</button>
+  <button class="lightbox-nav lightbox-prev" type="button" aria-label="Previous photograph">&lsaquo;</button>
+  <button class="lightbox-nav lightbox-next" type="button" aria-label="Next photograph">&rsaquo;</button>
+  <div class="lightbox-inner">
+    <img data-lb-img src="" alt="">
+    <div class="lightbox-caption">
+      <h3 data-lb-title></h3>
+      <p data-lb-text></p>
+    </div>
+  </div>
+</div>

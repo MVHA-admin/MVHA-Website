@@ -1,0 +1,35 @@
+---
+title: A new home for Mountain View's history
+date: 2026-09-01
+author: Mountain View Historical Association
+summary: Our website has been rebuilt from the ground up — faster, easier to search, and with the full run of city directories from 1870 to 1952 now online.
+---
+
+The Association's website has been rebuilt. It is faster, it works properly on a
+telephone, and — most importantly — far more of our archive is now searchable
+than ever before.
+
+## What is new
+
+- **The city directories, 1870–1952.** Tens of thousands of listings of the
+  people and businesses of early Mountain View, searchable by name, street or
+  trade. If your family was here, they are very likely in it.
+- **Every newsletter, searchable.** The full text of *The Mountain ReView* is
+  indexed, so a search for a surname or a street finds the issue that mentions
+  it and shows you the passage.
+- **The photograph archive**, browsable by decade and by subject.
+- **A city timeline** running from the Rancho era to the present day.
+
+## Why we rebuilt it
+
+The old site was showing its age, and each year more of our small budget went
+on keeping it running rather than on the archive itself. The new site is built
+from plain files. There is nothing to break, nothing to patch, and hosting it
+costs a fraction of what it did.
+
+That means more of what we raise goes where it should: to preserving and
+sharing the history of this city.
+
+> If you spot something wrong — a date, a name, a caption — please
+> [tell us](contact.html). Corrections from people who were there are the most
+> valuable thing we receive.

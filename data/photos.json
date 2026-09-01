@@ -1,0 +1,396 @@
+{
+  "_comment": "Photo archive. To add a photo: copy a block, change the values. 'src' can be a full web address or a local path like assets/images/my-photo.jpg. 'decade' drives the decade filter — use a 4-digit decade (e.g. 1950) or 'unknown'. 'topic' drives the topic filter and must match one of the topics listed below.",
+  "topics": [
+    "Downtown & Castro Street",
+    "Buildings & Landmarks",
+    "Castro Family",
+    "Transportation",
+    "Maps & Documents",
+    "Association History",
+    "People & Community"
+  ],
+  "photos": [
+    {
+      "id": "castro-street-1953",
+      "title": "Castro Street",
+      "date": "circa 1953",
+      "decade": 1950,
+      "topic": "Downtown & Castro Street",
+      "caption": "Looking down downtown Mountain View's main street in the early 1950s, lined with neon signs and four lanes of traffic.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/Downtown-Mountain-Views-Castro-Street-in-1953.jpg"
+    },
+    {
+      "id": "castro-street-1970",
+      "title": "Castro Street",
+      "date": "1970",
+      "decade": 1970,
+      "topic": "Downtown & Castro Street",
+      "caption": "Castro Street before the 1988–1990 downtown revitalization narrowed it to two lanes and widened the sidewalks.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2020/07/Castro-Street_1970_MVHC.jpg"
+    },
+    {
+      "id": "castro-201-then-now",
+      "title": "201 Castro Street, then and now",
+      "date": "circa 1905 and today",
+      "decade": 1900,
+      "topic": "Downtown & Castro Street",
+      "caption": "A c. 1905 commercial building at 201 Castro Street compared with the same corner in the present day.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/e-c.-1905-building-at-201-Castro-then-and-now..png"
+    },
+    {
+      "id": "mountain-view-station",
+      "title": "Mountain View Station Depot",
+      "date": "built circa 1888",
+      "decade": 1880,
+      "topic": "Transportation",
+      "caption": "The Southern Pacific depot that gave New Mountain View its name. Demolished in 1959; a replica was built at Centennial Plaza in 2002.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/Mountain-View-Station.png"
+    },
+    {
+      "id": "castro-station-depot",
+      "title": "Castro Station",
+      "date": "circa 1974",
+      "decade": 1970,
+      "topic": "Transportation",
+      "caption": "Castro Station looking north toward Rengstorff Avenue. Originally a flag stop granted to the Castro family in compensation for the railroad crossing their rancho.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2019/09/Castro-Station-Depot-Not-MVHA-Photo.jpg",
+      "credit": "Image source: wx4.org"
+    },
+    {
+      "id": "mayfield-mall",
+      "title": "Mayfield Mall",
+      "date": "circa 1966",
+      "decade": 1960,
+      "topic": "Buildings & Landmarks",
+      "caption": "One of the first fully enclosed, carpeted shopping malls in Northern California, at Central Expressway and San Antonio Road. Closed in 1983.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/Mall.png"
+    },
+    {
+      "id": "adobe-building",
+      "title": "The Historic Adobe Building",
+      "date": "built 1934, restored 2001",
+      "decade": 1930,
+      "topic": "Buildings & Landmarks",
+      "caption": "Built by New Deal work-relief laborers from adobe bricks made on site. Saved from demolition by the MVHA's Save the Adobe campaign and now on the National Register of Historic Places.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2020/07/Historic-Adobe-Building-1024x683.jpg"
+    },
+    {
+      "id": "adobe-building-today",
+      "title": "The Adobe Building today",
+      "date": "2009",
+      "decade": 2000,
+      "topic": "Buildings & Landmarks",
+      "caption": "The restored Adobe Building at 157 Moffett Boulevard, home to most of the Association's quarterly meetings.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/05/1200px-2009-0723-CA-MtnViewAdobe.jpg"
+    },
+    {
+      "id": "rengstorff-house",
+      "title": "The Rengstorff House",
+      "date": "built 1867",
+      "decade": 1860,
+      "topic": "Buildings & Landmarks",
+      "caption": "The oldest structure still standing in Mountain View, built by German immigrant Henry Rengstorff. Relocated to Shoreline Park and opened to the public in 1991.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2020/07/Rengstorff-house-1024x834.png"
+    },
+    {
+      "id": "moffett-field",
+      "title": "Moffett Field",
+      "date": "commissioned 1933",
+      "decade": 1930,
+      "topic": "Buildings & Landmarks",
+      "caption": "Built on land granted in 1844 as Rancho Posolmi to Lope Yñigo, an Ohlone man. Local residents bought 1,000 acres and sold it to the Navy for one dollar.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2020/07/Moffet-Air-Field-1024x682.png"
+    },
+    {
+      "id": "hangar-one",
+      "title": "Hangar One",
+      "date": "built 1931",
+      "decade": 1930,
+      "topic": "Buildings & Landmarks",
+      "caption": "One of the world's largest freestanding structures, covering eight acres, built to house the airship USS Macon.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2020/07/Hanger-one-hanger-1-e1594691504749-1024x821.jpg"
+    },
+    {
+      "id": "national-hotel",
+      "title": "The National Hotel",
+      "date": "early 1900s",
+      "decade": 1900,
+      "topic": "Buildings & Landmarks",
+      "caption": "An early Mountain View hotel from the town's first decades as an incorporated city.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/national_hotel_o.jpg"
+    },
+    {
+      "id": "mvhs-castro-campus",
+      "title": "Mountain View High School",
+      "date": "Castro Street campus, 1924–1981",
+      "decade": 1920,
+      "topic": "Buildings & Landmarks",
+      "caption": "The Castro Street campus of Mountain View Union High School, home of the Eagles. Demolished in 1987; the site is now Eagle Park, Park Place and City Centre.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/Mountain-VIew-High-School.png"
+    },
+    {
+      "id": "city-limit-sign",
+      "title": "Mountain View city limit sign",
+      "date": "1960s",
+      "decade": 1960,
+      "topic": "People & Community",
+      "caption": "A city limit sign from the decade when Mountain View's population and boundaries were expanding rapidly.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/MV-City-Limit-Sign-1960s.png"
+    },
+    {
+      "id": "mountain-view-1954",
+      "title": "Mountain View in 1954",
+      "date": "1954",
+      "decade": 1950,
+      "topic": "People & Community",
+      "caption": "Mountain View in the year the Historical Association was founded, as orchards began giving way to subdivisions.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/Mountain-View-1954.png"
+    },
+    {
+      "id": "mcdonald-burke-ice-1919",
+      "title": "Richard McDonald and Daniel Burke, ice delivery",
+      "date": "1919",
+      "decade": 1910,
+      "topic": "People & Community",
+      "caption": "Delivering ice in Mountain View, a decade before mechanical refrigeration became common in local homes.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/Richard-McDonald-and-Daniel-Burke-Ice-1919.png"
+    },
+    {
+      "id": "mcdonald-burke-1906",
+      "title": "Richard McDonald and Daniel Burke",
+      "date": "1906",
+      "decade": 1900,
+      "topic": "People & Community",
+      "caption": "Two Mountain View residents photographed in the year of the San Francisco earthquake.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/Richard-McDonald-and-Daniel-Burke-1906.png"
+    },
+    {
+      "id": "castro-adobe-1850",
+      "title": "The Castro family adobe",
+      "date": "circa 1850",
+      "decade": 1850,
+      "topic": "Castro Family",
+      "caption": "Mariano Castro's house, which combined adobe and wood construction and featured a large west-facing porch. It replaced the smaller Estrada adobe of the early 1840s.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2019/09/Castro-Adobe.jpg"
+    },
+    {
+      "id": "crisanto-castro",
+      "title": "Crisanto Castro",
+      "date": "19th century",
+      "decade": 1860,
+      "topic": "Castro Family",
+      "caption": "After his father Mariano's death in 1856, Crisanto Castro continued to live on the rancho with his widowed mother Maria Trinidad Peralta and his unmarried sisters.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2019/09/5A.jpg"
+    },
+    {
+      "id": "francisca-armijo-castro",
+      "title": "Francisca Armijo Castro",
+      "date": "19th century",
+      "decade": 1860,
+      "topic": "Castro Family",
+      "caption": "In 1857, Crisanto married Francisca Armijo. The couple and their children played a prominent role in the early development of Mountain View.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2019/09/5B.jpg"
+    },
+    {
+      "id": "villa-lands-map-1876",
+      "title": "Villa Lands of Mountain View",
+      "date": "1876",
+      "decade": 1870,
+      "topic": "Maps & Documents",
+      "caption": "An 1876 map of the 'Villa Lands of Mountain View', showing parcels sold off from the Castro family's Rancho Pastoria de las Borregas.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2019/09/Villa-Lands-of-Mountain-View.jpg"
+    },
+    {
+      "id": "castro-children-villa-francisca",
+      "title": "The Castro children at Villa Francisca",
+      "date": "circa 1911",
+      "decade": 1910,
+      "topic": "Castro Family",
+      "caption": "Susan Castro, Crisanto IV Castro, Mercedes Castro and, at back, Frank 'Pancho' Castro in front of Villa Francisca, built in 1911 and named in honour of their mother, Francisca.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2019/09/6.jpg"
+    },
+    {
+      "id": "castro-children-adults",
+      "title": "Five of the Castro children as adults",
+      "date": "early 20th century",
+      "decade": 1910,
+      "topic": "Castro Family",
+      "caption": "From left to right: Joe Castro, Susan Castro, Andrew Castro, Mercedes Castro, and Frank Castro.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2019/09/8.jpg"
+    },
+    {
+      "id": "castro-marker-dedication-1959",
+      "title": "Dedication of the Castro Adobe historic marker",
+      "date": "May 3, 1959",
+      "decade": 1950,
+      "topic": "Association History",
+      "caption": "Reverend Father James Doyle and Mercedes Castro at the dedication of a placard marking the site of the first Estrada/Castro adobe, at Central Expressway and Rengstorff Avenue.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2019/09/1959-MVHA_Castro_Adobe_Placard-Fr-Doyle_Mercedes-Castro-713x1024.jpg"
+    },
+    {
+      "id": "villa-francisca-1960",
+      "title": "Villa Francisca",
+      "date": "circa 1960",
+      "decade": 1960,
+      "topic": "Castro Family",
+      "caption": "The Castro family's Mission-style home shortly before a suspicious 1961 fire led the city to demolish it rather than repair the damage.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2019/09/9-1024x682.jpg"
+    },
+    {
+      "id": "rengstorff-avenue-1966",
+      "title": "Rengstorff Avenue",
+      "date": "1966",
+      "decade": 1960,
+      "topic": "Downtown & Castro Street",
+      "caption": "Rengstorff Avenue showing Rengstorff Park on the left and the Castro City neighbourhood on the right.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2019/09/10.jpg"
+    },
+    {
+      "id": "castro-city-residence",
+      "title": "A Mountain View residence",
+      "date": "early 20th century",
+      "decade": 1910,
+      "topic": "People & Community",
+      "caption": "Postcard showing a Mountain View residence, believed to be in Castro City.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2019/09/14-1024x645.jpg"
+    },
+    {
+      "id": "castro-city-market",
+      "title": "Castro City Market",
+      "date": "20th century",
+      "decade": 1960,
+      "topic": "People & Community",
+      "caption": "The Castro City Market and gas station, run by the Nakamura family, was a neighbourhood landmark until 1992. The building is now home to La Plaza Market.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2019/09/16.jpg"
+    },
+    {
+      "id": "escuela-avenue-school",
+      "title": "Escuela Avenue School",
+      "date": "opened 1948",
+      "decade": 1940,
+      "topic": "Buildings & Landmarks",
+      "caption": "Now named Mariano Castro Elementary School. Renamed in 1959 after residents pointed out that 'Escuela Avenue School' translated to 'School Avenue School'.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2019/09/17.jpg"
+    },
+    {
+      "id": "rengstorff-park-bbq",
+      "title": "Rengstorff Park BBQ area",
+      "date": "present day",
+      "decade": 2010,
+      "topic": "Castro Family",
+      "caption": "A group of mature eucalyptus and oak trees marks the spot where Villa Francisca once stood. The eucalyptus were likely planted by the Castro family.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2019/09/19.jpg"
+    },
+    {
+      "id": "rengstorff-park-sign",
+      "title": "Interpretive sign at Rengstorff Park",
+      "date": "present day",
+      "decade": 2010,
+      "topic": "Castro Family",
+      "caption": "A sign near the BBQ area describing the park's connection to the Castro family, including a small map of their rancho.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2019/09/IMG_2057.jpeg"
+    },
+    {
+      "id": "mvha-meeting-1960",
+      "title": "An early MVHA meeting",
+      "date": "circa 1960",
+      "decade": 1960,
+      "topic": "Association History",
+      "caption": "An early meeting of the Mountain View Pioneer and Historical Association at the Adobe Building.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2019/09/1960s-MVHA-Meeting_Adobe_Building.jpg"
+    },
+    {
+      "id": "mvha-bob-gurr-2016",
+      "title": "Bob Gurr speaks at the MVHA summer BBQ",
+      "date": "2016",
+      "decade": 2010,
+      "topic": "Association History",
+      "caption": "Original Disneyland Imagineer Bob Gurr speaks at the MVHA's 2016 summer BBQ at the Adobe Building, on his work with Mountain View's Arrow Development.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/Mountain-View-Historical-Association-Gathering.jpg"
+    },
+    {
+      "id": "mvha-board-history-center",
+      "title": "MVHA board meeting at the History Center",
+      "date": "2015",
+      "decade": 2010,
+      "topic": "Association History",
+      "caption": "Board members at the Mountain View History Center on the second floor of the Mountain View Public Library.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/Mountain-View-Historic-Association-Board-members.jpg"
+    },
+    {
+      "id": "mvha-county-fair",
+      "title": "MVHA at the Santa Clara County Fair",
+      "date": "2013",
+      "decade": 2010,
+      "topic": "Association History",
+      "caption": "An Association volunteer staffing the MVHA exhibit at the Santa Clara County Fair.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/Exibit-volunteer.jpg"
+    },
+    {
+      "id": "mvha-community",
+      "title": "MVHA in the community",
+      "date": "2016",
+      "decade": 2010,
+      "topic": "Association History",
+      "caption": "Association volunteers sharing Mountain View history at a local community event.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/05/12990858_992019684217247_1409738173237841568_n.jpg"
+    },
+    {
+      "id": "eagle-monument",
+      "title": "The Eagle has landed",
+      "date": "December 2023",
+      "decade": 2020,
+      "topic": "Association History",
+      "caption": "A bronze sculpture of an eagle mounted to the top of the new monument at Eagle Park, honouring the 1975 Mountain View High School CCS championship football team.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2024/03/PXL_20231217_152512143-compressed-771x1024.jpg"
+    },
+    {
+      "id": "eagle-monument-dedication",
+      "title": "Eagle monument dedication",
+      "date": "December 16, 2023",
+      "decade": 2020,
+      "topic": "Association History",
+      "caption": "MVHA President Pamela Baird welcomes the crowd gathered in Eagle Park for the dedication of the Mountain View High School monument.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2024/03/PXL_20231216_193332065-compressed-1024x563.jpg"
+    },
+    {
+      "id": "eagle-monument-sign",
+      "title": "Interpretive sign at Eagle Park",
+      "date": "December 2023",
+      "decade": 2020,
+      "topic": "Association History",
+      "caption": "The sign at the base of the eagle sculpture explains the history of Mountain View High School and how its 1975 football championship brought the city's diverse population together.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2024/03/PXL_20231217_152521801-compressed-1024x771.jpg"
+    },
+    {
+      "id": "lloyd-lettis-104",
+      "title": "Lloyd Lettis at 104",
+      "date": "October 2024",
+      "decade": 2020,
+      "topic": "People & Community",
+      "caption": "Lloyd Lettis, honoured by the MVHA as Mountain View's oldest living resident, at home in the house he bought for just under $13,000 in 1952.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2022/10/lloyd-lettis-2-1024x683.jpg",
+      "credit": "Photo by Anna Hoch-Kenney"
+    },
+    {
+      "id": "lloyd-lettis-portrait",
+      "title": "Lloyd Lettis",
+      "date": "October 11, 2024",
+      "decade": 2020,
+      "topic": "People & Community",
+      "caption": "Lloyd Lettis laughs during a conversation at his home in Mountain View.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2022/10/lloyd-lettis-1.jpg",
+      "credit": "Photo by Anna Hoch-Kenney"
+    },
+    {
+      "id": "lettis-family-photos",
+      "title": "A wall of family photos",
+      "date": "October 2024",
+      "decade": 2020,
+      "topic": "People & Community",
+      "caption": "A sparkling '104' sign sits on the counter underneath a wall of family photos in Lloyd Lettis's Mountain View home.",
+      "src": "https://www.mountainviewhistorical.org/wp-content/uploads/2022/10/MVHA-Oldest-Resident-1024x684.jpg",
+      "credit": "Photo by Anna Hoch-Kenney"
+    }
+  ]
+}

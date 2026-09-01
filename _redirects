@@ -1,0 +1,51 @@
+# Redirects from the old WordPress URLs to the new pages.
+# This file is read automatically by Netlify and Cloudflare Pages.
+# If you host somewhere else, use .htaccess (Apache) instead — see README.md.
+#
+# Format:  old-path  new-path  status-code
+# 301 means "moved permanently", which is what search engines need to see so
+# that the site keeps its existing Google ranking.
+
+/about-the-association                     /about.html                301
+/about-the-association/                    /about.html                301
+/our-history                               /our-history.html          301
+/our-history/                              /our-history.html          301
+/mountain-view-history-center              /history-center.html       301
+/mountain-view-history-center/             /history-center.html       301
+/history                                   /history.html              301
+/history/                                  /history.html              301
+/mountain-view-history-timeline            /timeline.html             301
+/mountain-view-history-timeline/           /timeline.html             301
+/castro-city-rengstorff-park               /castro-legacy.html        301
+/castro-city-rengstorff-park/              /castro-legacy.html        301
+/historical-buildings-in-mountain-view-ca  /landmarks.html            301
+/historical-buildings-in-mountain-view-ca/ /landmarks.html            301
+/mvhs-eagle-monument                       /eagle-monument.html       301
+/mvhs-eagle-monument/                      /eagle-monument.html       301
+/useful_links                              /links.html                301
+/useful_links/                             /links.html                301
+/video-gallery                             /videos.html               301
+/video-gallery/                            /videos.html               301
+/events                                    /events.html               301
+/events/                                   /events.html               301
+/events/page/*                             /events.html               301
+/eventbrite-event/*                        /events.html               301
+/oldest-living-resident                    /oldest-resident.html      301
+/oldest-living-resident/                   /oldest-resident.html      301
+/get-involved                              /join.html                 301
+/get-involved/                             /join.html                 301
+/donate                                    /donate.html               301
+/donate/                                   /donate.html               301
+/memberships                               /membership.html           301
+/memberships/                              /membership.html           301
+/volunteer                                 /volunteer.html            301
+/volunteer/                                /volunteer.html            301
+/newsletters                               /newsletters.html          301
+/newsletters/                              /newsletters.html          301
+/archived-newsletters                      /newsletters.html          301
+/archived-newsletters/                     /newsletters.html          301
+/contact-us                                /contact.html              301
+/contact-us/                               /contact.html              301
+
+# Anything else that is not found
+/*                                         /404.html                  404

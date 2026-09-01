@@ -1,0 +1,137 @@
+{
+  "_comment": "Search index for the site's regular pages. If you add a new page, add an entry here so it can be found by site search. 'body' should contain the key words and phrases someone might search for.",
+  "pages": [
+    {
+      "url": "index.html",
+      "title": "Home",
+      "summary": "Preserving and sharing the history of Mountain View, California since 1954.",
+      "body": "Mountain View Historical Association MVHA nonprofit volunteer 501c3 founded 1954 preserving sharing history Mountain View California quarterly meetings Adobe Building membership donate volunteer newsletter Mountain ReView"
+    },
+    {
+      "url": "about.html",
+      "title": "About the Association",
+      "summary": "Who we are, our goals, our meetings, and the volunteers on our Board of Directors.",
+      "body": "about association goals gather preserve historical data early settlement development collect record edit publish history pioneering activities preserve historic objects places cooperate organizations Santa Clara Valley quarterly general membership meetings first Sunday February May August November Adobe Building 157 Moffett Boulevard board of directors executive committee president vice president treasurer secretary standing committee chairs historical data membership newsletter ways and means directors at large Pamela Baird Robert Cox Anthea Chung Jamil Shaikh Nick Perry Lisa Roquero Garcia David Salinero John Cortez IdaRose Sylvester Carol Donahue Melanie Kaye"
+    },
+    {
+      "url": "our-history.html",
+      "title": "Our History",
+      "summary": "How a small group of residents founded the Association in 1954 — and what it has done since.",
+      "body": "MVHA history founded September 9 1954 incorporated 1958 Mountain View Pioneer and Historical Association archival collection scrapbooks yearbooks diaries photographs maps artifacts Milestones publication Save the Adobe campaign 1995 Adobe Building restored 2001 National Register of Historic Places Mountain ReView newsletter quarterly events guest speaker"
+    },
+    {
+      "url": "history-center.html",
+      "title": "Mountain View History Center",
+      "summary": "The combined archives of the Association and the Mountain View Public Library.",
+      "body": "Mountain View History Center archives collect organize make available historical resources promote heritage founded 1967 partnership City of Mountain View Public Library second floor 585 Franklin Street books pamphlets purchase scrapbooks yearbooks diaries photographs maps artifacts hours Tuesdays 1 to 5 PM appointment docent"
+    },
+    {
+      "url": "history.html",
+      "title": "History of Mountain View",
+      "summary": "From Ohlone villages and Mexican ranchos to orchards and Silicon Valley.",
+      "body": "history of Mountain View California Ohlone indigenous Tamien Mexican era Castro family Rancho Pastoria de las Borregas Gold Rush pioneers stagecoach stop El Camino Real immigrants agricultural Valley of Heart's Delight Silicon Valley technology recommended books Milestones Mary Jo Ignoffo Images of America Nicholas Perry Then and Now"
+    },
+    {
+      "url": "timeline.html",
+      "title": "City Timeline",
+      "summary": "A milestone-by-milestone timeline of Mountain View from before 1770 to today.",
+      "body": "timeline milestones chronology city history dates years founding incorporation 1902 railroad 1864 Castro Street Moffett Field Hangar One Adobe Building Shockley Intel Google Netscape Khan Academy Shoreline Amphitheatre Rengstorff House Mayfield Mall"
+    },
+    {
+      "url": "castro-legacy.html",
+      "title": "The Castro Family Legacy",
+      "summary": "How Castro Street and Rengstorff Park got their names — and the family behind them.",
+      "body": "Castro family history Rancho Pastoria de las Borregas Francisco Estrada Inez Castro Mariano Castro Crisanto Castro Francisca Armijo Mercedes Castro Villa Francisca Castro City Rengstorff Park Rengstorff Avenue Pastoria Avenue University Park Leland Avenue College Avenue Castro Station Mariano Castro Elementary School Escuela Avenue land grant adobe demolition 1961 historical marker 1959"
+    },
+    {
+      "url": "landmarks.html",
+      "title": "Historical Landmarks",
+      "summary": "Rengstorff House, the Adobe Building, Moffett Field, Hangar One and more.",
+      "body": "historical landmarks buildings Mountain View Rengstorff House oldest structure 1867 Henry Rengstorff Shoreline Park National Register of Historic Places Adobe Building 1934 community center Eagle Shack serviceman's club Moffett Field Rancho Posolmi Lope Yñigo naval air station NASA Ames Hangar One USS Macon walking tour driving tour Craftsman Spanish Revival Victorian bungalows Castro Street"
+    },
+    {
+      "url": "eagle-monument.html",
+      "title": "MVHS Eagle Monument",
+      "summary": "The 2023 monument at Eagle Park honouring the 1975 championship football team.",
+      "body": "MVHS Eagle monument Mountain View High School 1975 football team CCS championship dedication December 16 2023 Eagle Park High School Way Alberto Olmos Pamela Baird Mark Perry Susan Metcalf bronze eagle sculpture interpretive plaque You Gotta Believe alumni reunion Parks and Recreation"
+    },
+    {
+      "url": "archive.html",
+      "title": "Photo Archive",
+      "summary": "Browse historical photographs of Mountain View by decade and topic.",
+      "body": "photo archive photographs images historical pictures gallery browse search decade topic Castro Street depot Adobe Building Rengstorff House Moffett Field Hangar One Mayfield Mall Castro family Villa Francisca"
+    },
+    {
+      "url": "directories.html",
+      "title": "Historical Directories",
+      "summary": "Search 85,000 residents and businesses from the city directories, 1870–1952.",
+      "body": "historical directories city directory Polk residents businesses names occupations addresses 1870 1952 genealogy family history search by name street occupation year range residence business listing blacksmith grocer saloon teacher farmer orchard El Camino Castro Street ancestors trace a family trace a building"
+    },
+    {
+      "url": "videos.html",
+      "title": "Video Gallery",
+      "summary": "Recorded lectures and webinars on Mountain View history.",
+      "body": "video gallery videos webinars lectures recordings YouTube channel Pacific Press Shoreline West Stevens Creek Rengstorff House women's suffrage Votes for MV Women Castro Street past present future Silicon Valley East Whisman"
+    },
+    {
+      "url": "events.html",
+      "title": "Events",
+      "summary": "Quarterly membership meetings, walking tours, and community events.",
+      "body": "events quarterly meetings walking tours downtown Mountain View Centennial Plaza Adobe Building register Eventbrite ice cream social harvest history festival Heritage Park Eagle alumni picnic past events archive"
+    },
+    {
+      "url": "news.html",
+      "title": "News & Stories",
+      "summary": "News from the Association and short pieces drawn from the archives of Mountain View, California.",
+      "body": "news stories blog announcements articles archives history Mountain View Historical Association updates posts"
+    },
+    {
+      "url": "oldest-resident.html",
+      "title": "Who's the Oldest?",
+      "summary": "Meet Lloyd Lettis, the WWII veteran named Mountain View's oldest living resident.",
+      "body": "oldest living resident competition Lloyd Lettis 104 WWII veteran World War II US Army Air Forces radar Watsonville apple orchards Croatia Myrtle UC Berkeley 1952 home $13,000 apricot orchards Boy Scout PTA Suzanne Epstein Elzene Yancey Carol Donahue Emily Margaretten"
+    },
+    {
+      "url": "join.html",
+      "title": "Get Involved",
+      "summary": "Become a member, volunteer, or donate to support local history.",
+      "body": "get involved join support membership volunteer donate give contribute board of directors committees docent walking tour community outreach tabling educational programs event staffing communications newsletter editor social media"
+    },
+    {
+      "url": "membership.html",
+      "title": "Membership",
+      "summary": "Household and lifetime memberships, benefits, and how to join or renew.",
+      "body": "membership join renew household membership $30 lifetime membership $300 benefits quarterly newsletter invitations quarterly events discounts fee-based events newsletter subscription digital print renew by mail check P.O. Box 252 membership committee chair"
+    },
+    {
+      "url": "donate.html",
+      "title": "Donate",
+      "summary": "Financial contributions and donations to the archive. EIN 94-6115407.",
+      "body": "donate donation tax deductible 501c3 EIN 94-6115407 financial contribution archive item donation form artifacts preserve lectures publish plaques signs check mail Mountain View Pioneer and Historical Association P.O. Box 252 MVHS monument Castro Street"
+    },
+    {
+      "url": "volunteer.html",
+      "title": "Volunteer",
+      "summary": "Walking tour docent, History Center docent, outreach, board service and more.",
+      "body": "volunteer opportunities no experience required walking tour docent History Center docent program community outreach tabling ice cream socials board of directors educational programs schools event staffing Adobe Building communications newsletter editor social media writing"
+    },
+    {
+      "url": "newsletters.html",
+      "title": "Newsletters",
+      "summary": "The Mountain ReView, our quarterly newsletter — searchable back issues, free to read online.",
+      "body": "newsletter Mountain ReView quarterly newsletter articles history events activities digital edition print edition members submit stories photos archive since 1995 back issues search inside full text PDF searchable"
+    },
+    {
+      "url": "links.html",
+      "title": "Useful Links",
+      "summary": "Other organisations preserving the history of the Santa Clara Valley.",
+      "body": "useful links resources Calisphere photo archive City of Mountain View history page Friends of the Rengstorff House Moffett Field Museum Los Altos History Museum Palo Alto Historical Association Sunnyvale Heritage Park Museum California Pioneers of Santa Clara County History San Jose genealogical society Computer History Museum San Jose Public Library California Room"
+    },
+    {
+      "url": "contact.html",
+      "title": "Contact",
+      "summary": "Email, mailing address, and how to reach the right committee.",
+      "body": "contact us email info@mountainviewhistorical.org membership@mountainviewhistorical.org mail P.O. Box 252 Mountain View CA 94042 voicemail 650 903-6890 donation information volunteer opportunities membership"
+    }
+  ]
+}
