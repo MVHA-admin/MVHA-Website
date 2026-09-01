@@ -1,0 +1,28 @@
+{
+  // ========================================================================
+  // How Cloudflare publishes this site.
+  // ------------------------------------------------------------------------
+  // The site is plain files, so this Worker has no code of its own — it does
+  // nothing but serve what "node tools/build.js" produced. That is why there
+  // is no "main" line below.
+  //
+  // Cloudflare rebuilds and republishes on every push to GitHub. Its build
+  // settings are in the Cloudflare dashboard, not here:
+  //
+  //     Build command:   node tools/build.js
+  //     Deploy command:  npx wrangler deploy
+  //
+  // "name" decides the free web address: mvha-website.<subdomain>.workers.dev
+  // ========================================================================
+
+  "name": "mvha-website",
+  "compatibility_date": "2026-09-01",
+
+  "assets": {
+    // The whole site folder. .assetsignore says what to leave out.
+    "directory": "./",
+
+    // Show our own 404 page rather than Cloudflare's blank one.
+    "not_found_handling": "404-page"
+  }
+}

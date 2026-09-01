@@ -314,11 +314,14 @@ first:
 folder onto their dashboard. Both read `_redirects` automatically, so all the
 old WordPress addresses keep working. HTTPS is included.
 
-If you connect a repository, set the build command to `node tools/build.js`
-and the output directory to `/`. Every push then rebuilds and republishes the
-site on its own — which is also what makes the `/admin` panel possible. Both
-hosts give the project a free address of their own (`something.pages.dev`),
-so you can put the whole thing up and show people without moving any domain.
+Cloudflare's current workflow is **Workers**, not Pages — the dashboard now
+calls Pages "legacy". This folder is set up for Workers: `wrangler.jsonc`
+says which files to publish and `.assetsignore` says which to leave out.
+Connect the GitHub repository, set the build command to `node tools/build.js`
+and the deploy command to `npx wrangler deploy`, and every push rebuilds and
+republishes the site on its own — which is also what makes the `/admin` panel
+possible. You get a free address of the form `something.workers.dev`, so the
+whole site can go up and be shown to people without moving any domain.
 [SETUP-CMS.md](SETUP-CMS.md) walks through it.
 
 The `Launchers` and `tools` folders are only for working on the site locally.

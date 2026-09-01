@@ -1,0 +1,30 @@
+# ==========================================================================
+# Files that belong in the repository but not on the web server.
+#
+# Cloudflare reads this when it publishes. Everything listed here stays in
+# GitHub — where it should be — and simply is not copied onto the live site.
+# It has no effect on what Git tracks; that is .gitignore's job.
+# ==========================================================================
+
+# Working files. Nobody visiting the site needs these.
+tools
+Launchers
+.venv
+node_modules
+
+# Documentation — for whoever maintains the site, not for visitors.
+*.md
+
+# Apache settings. Only a traditional host such as GoDaddy reads these;
+# Cloudflare uses _redirects instead, which is deliberately NOT listed here.
+.htaccess
+
+# Housekeeping.
+.git
+.gitignore
+.gitattributes
+.DS_Store
+*.zip
+*.bak
+wrangler.jsonc
+.assetsignore

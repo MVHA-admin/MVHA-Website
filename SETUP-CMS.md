@@ -32,8 +32,8 @@ You need two free accounts. If you already have them, skip ahead.
 That is it. No credit card, no hosting bill.
 
 > **This does not touch dougnorris.com or GoDaddy.** Cloudflare gives the
-> project its own address ending in `.pages.dev` — something like
-> `mvha.pages.dev`. That is a real, working, public website you can show the
+> project its own address ending in `.workers.dev` — something like
+> `mvha-website.mvha.workers.dev`. That is a real, working, public website you can show the
 > board. The GoDaddy test copy can carry on exactly as it is. Only much
 > later, if the board says yes, does `mountainviewhistorical.org` get pointed
 > at it — and that is one DNS setting, not a re-run of any of this.
@@ -81,26 +81,36 @@ on that machine and it will recognise the folder.
 
 ### Then: create the repository
 
-1. Sign in to GitHub and press **New repository**.
-2. Name it `mvha-website`. Leave it **Public** (Cloudflare's free tier is
-   simplest that way, and there is nothing secret in it). Do **not** tick
-   "Add a README".
-3. Press **Create repository**.
+**Do this in GitHub Desktop only.** Do *not* also create a repository on
+github.com first — GitHub Desktop makes it for you, and having both means the
+name is already taken when you try to publish. (If you have already made an
+empty one, delete it: on github.com open the repository, then *Settings →
+Danger Zone → Delete this repository*. An empty repository holds nothing, so
+there is nothing to lose.)
 
-Now upload the folder, using **GitHub Desktop**
-(<https://desktop.github.com>) if you would rather not use Terminal:
+Install **GitHub Desktop** (<https://desktop.github.com>) and sign in, then:
 
-*File → Add local repository →* choose the `MVHA Website` folder.
+1. *File → Add local repository →* choose the `MVHA Website` folder.
+2. It will say **"This directory does not appear to be a Git repository"** and
+   offer to **create a repository here instead**. That is expected — the
+   folder has never been under version control. Click that link, then
+   **Create repository**.
+3. Press **Publish repository** at the top of the window.
+4. In the box that appears, set **Name** to `mvha-website` — lower case, with
+   a hyphen, not the folder's own name. You will type this into a
+   configuration file later, so the simpler it is the better.
+5. **Untick "Keep this code private."** It is ticked by default. Cloudflare's
+   free tier is simplest with a public repository, and there is nothing
+   private in the site — every file in it is already published on the web.
+6. Press **Publish repository**.
 
-It will say **"This directory does not appear to be a Git repository"** and
-offer to **create a repository here instead**. That is expected — the folder
-has never been under version control. Click that link, then **Create
-repository**, then **Publish repository** on the next screen.
+That is the whole of Step 1. The folder is now on GitHub.
 
-Untick **"Keep this code private"** when publishing, so it matches the
-public repository you made in step 2.
+### Or, from Terminal
 
-From Terminal it is:
+If you would rather not use GitHub Desktop, create an empty repository on
+github.com first (**New repository**, named `mvha-website`, Public, without a
+README), then:
 
 ```
 cd "path/to/MVHA Website"
@@ -117,26 +127,52 @@ Python folder, the `.zip` packages, and macOS's `.DS_Store` clutter.
 
 ---
 
-## Step 2 — Put it on the web with Cloudflare Pages
+## Step 2 — Put it on the web with Cloudflare
 
-1. In the Cloudflare dashboard, go to **Workers & Pages → Create → Pages →
-   Connect to Git**.
-2. Authorise Cloudflare to see your GitHub account and pick `mvha-website`.
-3. On the build settings screen:
+Cloudflare has two ways of hosting a site like this. The older one is called
+**Pages**; the dashboard now labels it "the legacy Pages workflow". The
+current one is **Workers**. This project is set up for Workers, so that
+nobody has to migrate it in a year or two.
+
+The two files that make that work — `wrangler.jsonc` and `.assetsignore` —
+are already in the folder. You do not need to edit either.
+
+1. Make sure the account switcher at the top left is on the **MVHA account**,
+   not your personal one.
+2. Go to **Workers & Pages → Create application**.
+3. On the "Make something new" screen choose **Continue with GitHub**.
+   (Ignore the "Continue to Pages" link at the bottom — that is the legacy
+   route.)
+4. Authorise Cloudflare and pick the `mvha-website` repository. If it asks
+   which repositories it may see, make sure `mvha-website` is ticked — a
+   private repository will not appear otherwise.
+5. On the build settings screen:
 
    | Setting | Value |
    | --- | --- |
-   | Framework preset | **None** |
    | Build command | `node tools/build.js` |
-   | Build output directory | `/` |
+   | Deploy command | `npx wrangler deploy` |
 
-4. Press **Save and Deploy**.
+   There is no "build output directory" in this workflow. `wrangler.jsonc`
+   already says which files to publish, which is what that setting used to do.
 
-A minute later you have a working site at `https://something.pages.dev`.
-Write that address down — you need it twice more below.
+6. Press **Create and deploy**.
+
+A minute or two later the site is live at
+`https://mvha-website.<your-subdomain>.workers.dev`. Write that address down
+— you need it twice more below.
 
 **That is the proof of concept.** You can stop here, send the address round
 the board, and come back to the rest when you are ready.
+
+### Check these two things on the first deploy
+
+- **The home page loads and the menu works.** If you get a blank page or a
+  Cloudflare error, open the deployment log in the dashboard — it will name
+  the file it choked on.
+- **A page address such as `/about.html` works.** Cloudflare may tidy it to
+  `/about` in the address bar. That is fine and harmless; every link on the
+  site still goes to the right place.
 
 ---
 
@@ -163,7 +199,7 @@ gatekeeper that you deploy once and then forget about.
    | Field | Value |
    | --- | --- |
    | Application name | `MVHA website editor` |
-   | Homepage URL | your `.pages.dev` address |
+   | Homepage URL | your `.workers.dev` address |
    | Authorization callback URL | your worker address **followed by `/callback`** |
 
    The callback must end in `/callback` — for example
@@ -183,7 +219,7 @@ Variables and Secrets**. Add three:
 | --- | --- | --- |
 | `GITHUB_CLIENT_ID` | the Client ID | Text |
 | `GITHUB_CLIENT_SECRET` | the Client Secret | **Secret** (encrypted) |
-| `ALLOWED_DOMAINS` | your `.pages.dev` hostname | Text |
+| `ALLOWED_DOMAINS` | your `.workers.dev` hostname | Text |
 
 Deploy the worker again so the new values take effect.
 
@@ -208,7 +244,7 @@ Replace both, save, and push the change to GitHub (in GitHub Desktop:
 *Commit*, then *Push origin*).
 
 While you are in there, you may also want to change `site_url` and
-`display_url` from `mountainviewhistorical.org` to your `.pages.dev`
+`display_url` from `mountainviewhistorical.org` to your `.workers.dev`
 address, so the "view the live page" links in the panel point at the test
 site rather than the old one.
 
@@ -216,7 +252,7 @@ site rather than the old one.
 
 ## Step 5 — Try it
 
-Go to `https://your-address.pages.dev/admin`.
+Go to `https://your-address.workers.dev/admin`.
 
 You should get a **Sign in with GitHub** button. Sign in, and you should see
 four sections: News & Stories, Events, Photographs, and Board of Directors.
