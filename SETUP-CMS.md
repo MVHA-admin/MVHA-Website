@@ -184,47 +184,124 @@ gatekeeper that you deploy once and then forget about.
 
 ### 3a. Deploy the gatekeeper
 
+You are about to create a **second** Worker. When you are done, Workers &
+Pages will list two things:
+
+| Worker | What it is |
+| --- | --- |
+| `mvha-website` | The website itself |
+| `sveltia-cms-auth` | The gatekeeper for the Sign in with GitHub button |
+
+The gatekeeper is not a website and has no pages to visit. Its whole job is
+to sit between the editing panel and GitHub during sign-in, because that
+exchange needs a password that must not be written into any page a visitor
+could read.
+
 1. Go to <https://github.com/sveltia/sveltia-cms-auth>.
 2. Press the **Deploy to Cloudflare Workers** button in its README and follow
-   the prompts.
-3. When it finishes, copy the worker's address. It looks like
-   `https://sveltia-cms-auth.YOUR-NAME.workers.dev`.
+   the prompts. **Check the account switcher shows the MVHA account** before
+   you confirm.
+3. When it finishes, you need its web address.
+
+   It follows exactly the same pattern as the site's. Every Worker in the
+   account is `<worker name>.<your subdomain>.workers.dev`, and this
+   account's subdomain is shown on the Workers & Pages page under **Account
+   details → Subdomain**. So if the site is at
+
+       mvha-website.mvha.workers.dev
+
+   the gatekeeper will be at
+
+       sveltia-cms-auth.mvha.workers.dev
+
+   To see it rather than predict it: **Workers & Pages → sveltia-cms-auth**,
+   and the address is on that project's page. Copy whatever it actually says.
+
+You will need that address twice below — once as the GitHub callback URL
+(with `/callback` added to the end) and once as `base_url` in
+`admin/config.yml`.
 
 ### 3b. Register the site with GitHub
 
-1. On GitHub, go to **Settings → Developer settings → OAuth Apps → New OAuth
-   App** (or go straight to <https://github.com/settings/developers>).
+1. On GitHub, go to <https://github.com/settings/developers> → **OAuth Apps**
+   → **New OAuth App**.
+
+   These are your **account** settings, not a repository's — a repository has
+   no Developer settings, which is where most people get stuck. By clicking:
+   your avatar (top right) → **Settings** → then scroll to the very *bottom*
+   of the long left-hand sidebar. "Developer settings" is the last item.
+
+   Be signed in as the MVHA GitHub account, not a personal one.
 2. Fill it in:
 
    | Field | Value |
    | --- | --- |
    | Application name | `MVHA website editor` |
-   | Homepage URL | your `.workers.dev` address |
-   | Authorization callback URL | your worker address **followed by `/callback`** |
+   | Homepage URL | the **website's** address, e.g. `https://mvha-website.mvha.workers.dev` |
+   | Redirect URI | the **gatekeeper's** address **followed by `/callback`** |
 
-   The callback must end in `/callback` — for example
-   `https://sveltia-cms-auth.craig.workers.dev/callback`. This is the single
-   most common thing to get wrong.
+   **"Redirect URI" is the field older guides call the "Authorization
+   callback URL".** GitHub renamed it; it is the box under the *Redirect
+   URIs* heading, showing `e.g. https://example.com/auth`.
+
+   Note that the two URLs are different Workers. The Redirect URI is the
+   gatekeeper, and it must end in `/callback` — for example
+   `https://sveltia-cms-auth.mvha.workers.dev/callback`. Getting this wrong
+   is the single most common reason sign-in fails.
+
+   Leave *Allow wildcard matching* and *Enable Device Flow* unticked.
+
+   **Untick "Expire user access tokens".** It is ticked by default. It makes
+   GitHub issue tokens that expire after a few hours and must be renewed, and
+   the gatekeeper does not document any support for renewing them — so
+   editors would be signed out unexpectedly, probably with an error rather
+   than a tidy prompt. With it off, signing in is the one-off that
+   EDITING.md promises. You keep control either way: removing someone as a
+   collaborator cuts their access at once, and the whole app can be revoked
+   from GitHub whenever you like.
 
 3. Press **Register application**, then **Generate a new client secret**.
    You now have a **Client ID** and a **Client Secret**. The secret is shown
    once — copy it now.
 
-### 3c. Give the gatekeeper those two values
+### 3c. Give the gatekeeper what it needs to know
 
-Back in Cloudflare: **Workers & Pages → sveltia-cms-auth → Settings →
-Variables and Secrets**. Add three:
+The gatekeeper is deployed but knows nothing yet. This step tells it three
+things — which GitHub app it is, the password proving it really is that app,
+and which website is allowed to use it. Until it has all three it cannot talk
+to GitHub, which is why sign-in still fails at this point.
 
-| Name | Value | Type |
+Go to **Workers & Pages → sveltia-cms-auth → Settings → Runtime variables and
+secrets**, and press **Add variable** three times:
+
+| Type | Name | Value |
 | --- | --- | --- |
-| `GITHUB_CLIENT_ID` | the Client ID | Text |
-| `GITHUB_CLIENT_SECRET` | the Client Secret | **Secret** (encrypted) |
-| `ALLOWED_DOMAINS` | your `.workers.dev` hostname | Text |
+| Text | `GITHUB_CLIENT_ID` | the Client ID from the OAuth app |
+| **Secret** | `GITHUB_CLIENT_SECRET` | the Client Secret from the OAuth app |
+| Text | `ALLOWED_DOMAINS` | `mvha-website.mvha.workers.dev` |
 
-Deploy the worker again so the new values take effect.
+Then press **Deploy**. Variables do not take effect until the Worker is
+redeployed — they look saved, but nothing changes until you do this. It is
+the easiest step in the whole process to miss.
 
-`ALLOWED_DOMAINS` means only your site can use this login. Leave it out and
-anyone could point their own site at your gatekeeper.
+Three things to get right:
+
+- **The names must match exactly**, capitals and underscores included. The
+  gatekeeper looks for these precise spellings and ignores anything else.
+- **`ALLOWED_DOMAINS` is a bare hostname** — no `https://`, no trailing
+  slash — and it is the **website's** address, not the gatekeeper's.
+- **Use Secret, not Text, for the client secret**, so it is encrypted and
+  never shown again.
+
+`ALLOWED_DOMAINS` is what stops anyone else pointing their own site at your
+gatekeeper and borrowing your GitHub credentials. Leave it out and the
+gatekeeper will work for anybody.
+
+The values live at <https://github.com/settings/developers> → the "MVHA
+website editor" app. The Client ID is always visible there. The Secret is
+shown once, when generated — if you have navigated away, generate a new one
+and use that. The old one stops working, which is fine as nothing is using it
+yet.
 
 ---
 

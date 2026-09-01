@@ -6,15 +6,17 @@
 # named in the collection, exactly as if you had edited it by hand — so
 # nothing here is a database, and every edit keeps its own history.
 #
-# TWO THINGS MUST BE FILLED IN BEFORE THIS WORKS. Both are marked CHANGE ME.
-# See SETUP-CMS.md in the main folder for how to get each one.
+# The two settings that connect this panel to GitHub and to the sign-in
+# gatekeeper are filled in below. If either the repository or the gatekeeper
+# is ever renamed or moved, "repo" and "base_url" are the lines to change.
+# See SETUP-CMS.md in the main folder.
 # ==========================================================================
 
 backend:
   name: github
-  repo: CHANGE-ME/mvha-website        # CHANGE ME — your GitHub username/repo
+  repo: MVHA-admin/mvha-website
   branch: main
-  base_url: https://CHANGE-ME.workers.dev   # CHANGE ME — your login worker
+  base_url: https://sveltia-cms-auth.mvha.workers.dev
   commit_messages:
     create: 'Add {{collection}} “{{slug}}”'
     update: 'Update {{collection}} “{{slug}}”'
@@ -27,8 +29,8 @@ media_folder: assets/images
 public_folder: assets/images
 
 # Show an "In preview" link that opens the real page.
-site_url: https://www.mountainviewhistorical.org
-display_url: https://www.mountainviewhistorical.org
+site_url: https://mvha-website.mvha.workers.dev
+display_url: https://mvha-website.mvha.workers.dev
 logo_url: https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/MVHA-Logo-300x300.jpg
 
 # Editors write in their own language of the interface; content stays as typed.
