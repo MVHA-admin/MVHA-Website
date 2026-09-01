@@ -28,3 +28,8 @@ node_modules
 *.bak
 wrangler.jsonc
 .assetsignore
+
+# Old files parked for deletion. They are still in the repository's history,
+# but nothing here should ever be served — a stray sitemap.xml in particular
+# would confuse search engines.
+_to_delete
