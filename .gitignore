@@ -7,3 +7,6 @@ package-lock.json
 # Upload packages are built on demand — no need to keep them in the repository.
 mvha-site.zip
 mvha-site-test.zip
+
+# Files parked for manual deletion — not part of the site.
+_to_delete/
