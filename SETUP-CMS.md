@@ -79,6 +79,24 @@ on that machine and it will recognise the folder.
 > pushed. This is worth knowing precisely so that a strange Git error is
 > never something to fight with.
 
+> **Where this lives now.** The steps below describe setting the site up from
+> nothing, which is how it was first done. Since 2 September 2026 the
+> repository has lived in a GitHub **organisation**, `mountain-view-historical`, rather than under
+> one person's account — that is the only way it can have more than one owner,
+> so that nobody's personal login is a single point of failure. If you are
+> reading this to understand the existing setup rather than to build a new one,
+> read `github.com/mountain-view-historical/mvha-website` wherever these steps say a personal
+> account.
+>
+> Two things follow from that arrangement and are easy to trip over:
+>
+> - **New organisations block third-party sign-in apps by default.** If `/admin`
+>   refuses everyone after a change to the organisation, approve the gatekeeper
+>   under organisation **Settings → Third-party Access**.
+> - **Cloudflare's GitHub connection is installed per account.** If deployments
+>   stop after a repository moves, Cloudflare needs authorising for the
+>   organisation and the Worker's build settings re-pointing at the repository.
+
 ### Then: create the repository
 
 **Do this in GitHub Desktop only.** Do *not* also create a repository on

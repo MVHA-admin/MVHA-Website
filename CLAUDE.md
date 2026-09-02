@@ -23,10 +23,10 @@ files. Content lives in `data/*.json` and `tools/content/`.
 | --- | --- |
 | Test site | https://mvha-website.mvha.workers.dev |
 | Editing panel | https://mvha-website.mvha.workers.dev/admin |
-| Repository | github.com/MVHA-admin/mvha-website (private) |
+| Repository | github.com/mountain-view-historical/mvha-website (private) |
 | Sign-in gatekeeper | https://sveltia-cms-auth.mvha.workers.dev |
 | Cloudflare | separate MVHA account, subdomain `mvha.workers.dev` |
-| GitHub | account `MVHA-admin` |
+| GitHub | organisation `mountain-view-historical`. `MVHA-admin` is the account that created it and still owns the sign-in gatekeeper repo. |
 | Old GoDaddy test copy | dougnorris.com/mvhistory (manual zip upload, still in use) |
 
 The real domain has **not** moved. This is a proof of concept to show the
@@ -150,9 +150,13 @@ the live site. Still to do, roughly in order:
    page banner, article illustrations) are still served from the old WordPress
    server, so it cannot be switched off until this is run. The Photographs
    page is no longer part of that problem: it points at the Internet Archive.
-5. **Before the real domain moves** — put the repo in a GitHub Organization
-   and register the permanent Cloudflare account to an MVHA-owned email
-   address, so none of this depends on one volunteer's personal accounts.
+5. **Before the real domain moves** — the website repository now sits in the
+   GitHub organisation `mountain-view-historical` (2 September 2026), which is
+   what lets it have more than one owner. Two things still outstanding:
+   `sveltia-cms-auth` is still under the personal `MVHA-admin` account and
+   should be transferred to the organisation too, and both the organisation
+   and the Cloudflare account are still registered to `mvha@thenorrises.com`
+   rather than an MVHA-owned address.
 
 ## Documentation in this folder
 

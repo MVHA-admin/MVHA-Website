@@ -14,7 +14,7 @@
 
 backend:
   name: github
-  repo: MVHA-admin/mvha-website
+  repo: mountain-view-historical/mvha-website
   branch: main
   base_url: https://sveltia-cms-auth.mvha.workers.dev
   commit_messages:
