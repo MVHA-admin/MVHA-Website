@@ -367,6 +367,34 @@ to GitHub. It must be exactly `username/repository-name`.
 The callback URL in the OAuth App does not end in `/callback`, or does not
 exactly match the worker address.
 
+**"OAuth app client ID or secret is not configured."**
+The variables were saved but the gatekeeper is still *running* the version
+that existed before them. Cloudflare separates two things that sound
+identical:
+
+- a **version** — a snapshot of the code and its settings
+- the **active deployment** — the one version actually answering requests
+
+Adding the variables created a new version. It did not put that version into
+service, so the Worker carried on running the older one.
+
+Go to **sveltia-cms-auth → Deployments**. Compare the *Active deployment*
+box at the top with the newest row in *Version History* — the newest row will
+be named something like "Add secret: GITHUB_CLIENT_ID …". If they are
+different version IDs, that is the problem. Click the **⋯** menu on that
+newest row and choose **Deploy** (or *Promote to 100%*). The Active
+deployment box should then show the new ID.
+
+The same applies to any later change to these variables: saving is not
+deploying.
+
+**A change you have published does not appear on the site.**
+Before assuming the deploy failed, load the page in a private browser window.
+Browsers hold on to files such as `admin/config.yml` and the stylesheet for a
+while, so you can be looking at yesterday's copy of a file on a site that
+updated correctly. Visitors are not affected — only someone who loaded the
+old version recently.
+
 **Sign-in works, then the panel says it cannot load the repository.**
 That person has not been added as a collaborator, or has not accepted the
 invitation yet.
