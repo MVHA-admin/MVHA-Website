@@ -175,7 +175,7 @@ collections:
       - name: photos
         label: Photo archive
         file: data/photos.json
-        description: The photographs on the archive page. Add the topic first if the one you need is not in the list.
+        description: "Our own photographs. The thirteen hundred pictures from the Internet Archive are listed separately and are not edited here — see README.md. Add the topic first if the one you need is not in the list."
         fields:
           - name: _comment
             label: Note to editors

@@ -57,20 +57,22 @@ const NAV = [
     { label: 'Our History', href: 'our-history.html' },
     { label: 'History Center', href: 'history-center.html' }
   ]},
-  { label: 'History', href: 'history.html', children: [
-    { label: 'History of Mountain View', href: 'history.html' },
+  { label: 'Photographs', href: 'archive.html' },
+  { label: 'Archives', href: 'archives.html', children: [
+    { label: 'City Directories', href: 'directories.html' },
     { label: 'City Timeline', href: 'timeline.html' },
-    { label: 'Photo Archive', href: 'archive.html' },
-    { label: 'Castro Family Legacy', href: 'castro-legacy.html' },
-    { label: 'Historical Landmarks', href: 'landmarks.html' },
-    { label: 'Historical Directories', href: 'directories.html' },
-    { label: 'MVHS Eagle Monument', href: 'eagle-monument.html' },
-    { label: 'Who&rsquo;s the Oldest?', href: 'oldest-resident.html' },
     { label: 'Video Gallery', href: 'videos.html' },
     { label: 'Useful Links', href: 'links.html' }
   ]},
+  { label: 'Books &amp; Articles', href: 'books-articles.html', children: [
+    { label: 'History of Mountain View', href: 'history.html' },
+    { label: 'The Castro Family Legacy', href: 'castro-legacy.html' },
+    { label: 'Historical Landmarks', href: 'landmarks.html' },
+    { label: 'Who&rsquo;s the Oldest?', href: 'oldest-resident.html' },
+    { label: 'MVHS Eagle Monument', href: 'eagle-monument.html' },
+    { label: 'News &amp; Stories', href: 'news.html' }
+  ]},
   { label: 'Events', href: 'events.html' },
-  { label: 'News', href: 'news.html' },
   { label: 'Newsletters', href: 'newsletters.html' },
   { label: 'Get Involved', href: 'join.html', children: [
     { label: 'Membership', href: 'membership.html' },
@@ -167,12 +169,12 @@ ${socialHtml()}
       <div>
         <h3>Explore</h3>
         <ul>
+          <li><a href="archive.html">Photographs</a></li>
+          <li><a href="directories.html">City Directories</a></li>
+          <li><a href="archives.html">Archives</a></li>
+          <li><a href="books-articles.html">Books &amp; Articles</a></li>
           <li><a href="history.html">History of Mountain View</a></li>
           <li><a href="timeline.html">City Timeline</a></li>
-          <li><a href="archive.html">Photo Archive</a></li>
-          <li><a href="landmarks.html">Historical Landmarks</a></li>
-          <li><a href="castro-legacy.html">Castro Family Legacy</a></li>
-          <li><a href="videos.html">Video Gallery</a></li>
         </ul>
       </div>
 

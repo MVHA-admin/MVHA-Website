@@ -84,6 +84,39 @@ Copy an existing block and change the values:
 - `src` can be a file in `assets/images/` or a full web address.
 - `credit` is optional — use it for "Photo by ..." lines.
 
+#### The Internet Archive photographs
+
+The Photographs page shows two things at once. `data/photos.json`, above, is
+the Association's own list — the one the editing panel writes to. Beside it
+sits `data/photos-ia.json`, a catalogue of the thirteen hundred photographs
+digitised through California Revealed, which are held by the Internet Archive
+in two collections: the City library's and our own.
+
+We keep no copy of those pictures. The page shows the Archive's thumbnail and
+links to the item there. That is deliberate: the photographs outlive any
+website, we store and pay for nothing, and the visitor always reaches the full
+catalogue record.
+
+**Do not edit `data/photos-ia.json` by hand.** It is generated:
+
+```
+node tools/ia/build-photos.js
+```
+
+That reads `tools/ia/ia-photos-source.csv` — the catalogue export — and writes
+the JSON. Everything else is worked out there: which shelf a photograph goes on
+(from its title, using the list of patterns near the top of the script), how
+its date should read, and the three Internet Archive addresses, which are built
+from the identifier rather than stored.
+
+Both files share one list of topic names, because the page puts them in a
+single menu. If you add a topic to `photos.json`, use the same wording as the
+list in the script, or the menu will show two shelves that look identical.
+
+Recorded oral history interviews sit in the same Archive collections. They are
+counted but left out of the gallery — a row of identical placeholders helps
+nobody — and the page links to them instead.
+
 ### Timeline
 
 Edit `data/timeline.json`. Each entry needs a `year` (what is displayed), a
@@ -285,8 +318,11 @@ timeline, photo archive, events, board list and search all actually render.
 
 ## Images
 
-The site currently loads photographs from the old WordPress server. That works
-straight away, but it means the new site still depends on the old one.
+The pictures on the Photographs page come from the Internet Archive and need
+nothing done to them. But the photographs used *in the pages themselves* — the
+banner on the home page, the pictures beside articles — are still loaded from
+the old WordPress server. That works straight away, but it means the new site
+still depends on the old one.
 
 To bring the images onto your own site, run this once:
 
@@ -411,14 +447,20 @@ data/posts.json                 Generated. The news index, for the listing
                                 page and for site search.
 
 data/events.json                Events. Edit freely.
-data/photos.json                Photo archive. Edit freely.
+data/photos.json                Our own photographs. Edit freely.
+data/photos-ia.json             Generated. The Internet Archive catalogue —
+                                run tools/ia/build-photos.js, do not edit.
 data/timeline.json              City timeline. Edit freely.
 data/board.json                 Board of Directors. Edit freely.
 data/newsletters.json           Newsletter issues and their extracted text.
-data/directory_index.json       85,565 city directory listings, 1870–1952.
+data/directory_index.json       188,244 city directory listings, 1870–1968.
 data/pages.json                 Search index for the regular pages.
 
 tools/build.js                  Builds the pages. Also holds the navigation.
+tools/ia/build-photos.js        Turns the Internet Archive catalogue export
+                                into data/photos-ia.json.
+tools/ia/ia-photos-source.csv   That export. The only file to edit if a
+                                photograph's title or description is wrong.
 tools/check.js                  Link and data checker.
 tools/package.js                Builds the upload .zip.
 tools/index_newsletters.py      Reads the newsletter PDFs: full text for search,

@@ -92,6 +92,13 @@ Register button then simply does not appear.
 
 **Photographs → Photographs → Add Photograph.**
 
+Most of the pictures on the Photographs page are not here. Around thirteen
+hundred of them were digitised by California Revealed and live permanently at
+the Internet Archive; the website simply shows them and links across. Those
+cannot be changed from this panel, and they do not need to be. What you add
+here is the Association's own — photographs given to us, or taken at our own
+events — and it appears alongside them.
+
 - **The picture** — press the box and either drag a file in or choose one
   already uploaded.
 - **Topic** — must match one of the topics in the list at the top of the same

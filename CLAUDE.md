@@ -1,6 +1,6 @@
 # MVHA Website — context for Claude
 
-Read this first. It is the state of the project as of **1 September 2026**,
+Read this first. It is the state of the project as of **2 September 2026**,
 written so a new session on a different computer can pick up without Craig
 having to re-explain anything.
 
@@ -77,6 +77,27 @@ panel commits to GitHub, which triggers a rebuild — live in a minute or two.
 - **Day-to-day content needs no rebuild.** Events, photos, timeline and board
   come from `data/*.json`, read in the browser. Only page wording and news
   posts require a build.
+- **The menu has four top-level sections for content**: Photographs, Archives
+  (directories, timeline, videos, links), Books & Articles (the history
+  overview, the four articles, the three books, news posts) and Newsletters.
+  There is deliberately no "History" tab — the whole site is about the history
+  of Mountain View, so the word carried no information and read as though it
+  meant the history of the Association. Changed 2 September 2026 after board
+  feedback; `archives.html` and `books-articles.html` are the two landing
+  pages this added.
+- **Photographs come from the Internet Archive.** `data/photos-ia.json` lists
+  1,298 pictures digitised through California Revealed and held in two IA
+  collections — `mountainviewlibrary` (the City library's) and
+  `mountain-view-historical-association` (ours, 77 items). The site stores no
+  copies: it shows IA's thumbnail and links to the item. The file is generated
+  by `node tools/ia/build-photos.js` from `tools/ia/ia-photos-source.csv`,
+  which came out of the Castro Street Archive project's `cmv_catalog`. Topics
+  are derived from titles by pattern, because the IA records carry almost no
+  subject headings. `data/photos.json` is separate and stays editable in the
+  CMS; the page merges the two and both share one topic vocabulary.
+- **MVHA already has its own Internet Archive collection.** Worth remembering
+  before the directory scans go up — the upload plan in the Castro Street
+  project assumed `opensource` was the only option.
 - `node tools/check.js` verifies links, assets, JSON and the search index.
   Run it before publishing.
 
@@ -125,8 +146,10 @@ the live site. Still to do, roughly in order:
 3. **Forms and payments.** Membership, donation, volunteer and contact forms
    still just open the visitor's email app. Formspree plus a Stripe or PayPal
    link is the identified fix.
-4. **`tools/localise-images.sh`** — photographs are still served from the old
-   WordPress server, so it cannot be switched off until this is run.
+4. **`tools/localise-images.sh`** — the pictures used *inside pages* (the home
+   page banner, article illustrations) are still served from the old WordPress
+   server, so it cannot be switched off until this is run. The Photographs
+   page is no longer part of that problem: it points at the Internet Archive.
 5. **Before the real domain moves** — put the repo in a GitHub Organization
    and register the permanent Cloudflare account to an MVHA-owned email
    address, so none of this depends on one volunteer's personal accounts.

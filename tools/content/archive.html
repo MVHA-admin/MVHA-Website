@@ -1,16 +1,16 @@
 <!--META
 {
-  "title": "Photo Archive",
-  "description": "Browse historical photographs of Mountain View, California from the Mountain View Historical Association archive. Filter by decade and topic, or search by keyword.",
+  "title": "Photographs",
+  "description": "More than thirteen hundred historical photographs of Mountain View, California, from the Mountain View History Center and the City library — searchable by keyword, decade and topic.",
   "image": "https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/Downtown-Mountain-Views-Castro-Street-in-1953.jpg"
 }
 -->
 
 <section class="pagehead">
   <div class="wrap">
-    <p class="breadcrumb"><a href="index.html">Home</a><span>&rsaquo;</span><a href="history.html">History</a><span>&rsaquo;</span>Photo Archive</p>
-    <h1>Photo Archive</h1>
-    <p>Photographs from the Association&rsquo;s collection and the Mountain View History Center. Search by keyword, or narrow by decade and topic. Select any photograph to see it larger.</p>
+    <p class="breadcrumb"><a href="index.html">Home</a><span>&rsaquo;</span>Photographs</p>
+    <h1>Photographs</h1>
+    <p>More than thirteen hundred photographs of Mountain View, from the Association&rsquo;s own collection and from the Mountain View History Center. Search by keyword, or narrow by decade, topic and collection. Select any photograph to see it larger.</p>
   </div>
 </section>
 
@@ -20,7 +20,7 @@
     <div class="archive-toolbar">
       <div class="field">
         <label for="archive-q">Search photographs</label>
-        <input type="search" id="archive-q" data-archive-search placeholder="e.g. Castro, depot, orchard">
+        <input type="search" id="archive-q" data-archive-search placeholder="e.g. Castro, depot, orchard, Rengstorff">
       </div>
       <div class="field">
         <label for="archive-decade">Decade</label>
@@ -34,29 +34,46 @@
           <option value="">All topics</option>
         </select>
       </div>
+      <div class="field">
+        <label for="archive-collection">Collection</label>
+        <select id="archive-collection" data-archive-collection>
+          <option value="">All collections</option>
+        </select>
+      </div>
       <p class="result-count" data-archive-count></p>
     </div>
 
     <h2 class="visually-hidden">Photographs</h2>
     <div class="gallery" data-gallery>
-      <p>Loading the archive&hellip;</p>
+      <p>Loading the photographs&hellip;</p>
     </div>
+    <div class="btn-row btn-row--centre" data-gallery-more></div>
 
   </div>
 </section>
 
 <section class="section section--tint">
   <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Where these come from</p>
+      <h2>Held by the Internet Archive, not by us</h2>
+      <p>Most of the photographs above were digitised through <a href="https://californiarevealed.org/" target="_blank" rel="noopener">California Revealed</a>, a State Library programme, and are kept permanently by the Internet Archive. This website shows the Archive&rsquo;s pictures and links to them; it holds no copies of its own. That is deliberate &mdash; it means the photographs outlive any website, and that the record you reach is always the fullest one, with the original catalogue entry beside it.</p>
+      <p style="font-size:.92rem;color:var(--ink-faint)" data-archive-note></p>
+    </div>
+
     <div class="grid grid-2">
       <div class="card"><div class="card-body">
-        <h3>Looking for more?</h3>
-        <p>Many more photographs from the Mountain View History Center have been digitised and are searchable through the University of California&rsquo;s Calisphere website.</p>
-        <a class="btn btn--ghost" href="https://calisphere.org/collections/27188/" target="_blank" rel="noopener">Search Calisphere</a>
+        <h3>Browse the collections in full</h3>
+        <p>Both collections can be browsed and searched on the Internet Archive itself, where each photograph carries its complete catalogue record and can be downloaded at full size.</p>
+        <div class="btn-row">
+          <a class="btn btn--ghost" href="https://archive.org/details/mountain-view-historical-association" target="_blank" rel="noopener">Our collection</a>
+          <a class="btn btn--ghost" href="https://archive.org/details/mountainviewlibrary" target="_blank" rel="noopener">The City library&rsquo;s</a>
+        </div>
       </div></div>
       <div class="card"><div class="card-body">
         <h3>Have a photograph to share?</h3>
         <p>We are always looking to add to the archive. If you have photographs, documents or artifacts of local historical significance, we would like to hear from you.</p>
-        <a class="btn btn--ghost" href="donate.html">Donate to the archive</a>
+        <a class="btn btn--ghost" href="contact.html">Get in touch</a>
       </div></div>
     </div>
   </div>
@@ -72,6 +89,8 @@
     <div class="lightbox-caption">
       <h3 data-lb-title></h3>
       <p data-lb-text></p>
+      <p class="lightbox-credit" data-lb-credit></p>
+      <p><a class="lightbox-link" data-lb-link href="" target="_blank" rel="noopener" hidden>See the full record on the Internet Archive</a></p>
     </div>
   </div>
 </div>

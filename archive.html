@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Photo Archive &mdash; Mountain View Historical Association</title>
-<meta name="description" content="Browse historical photographs of Mountain View, California from the Mountain View Historical Association archive. Filter by decade and topic, or search by keyword.">
+<title>Photographs &mdash; Mountain View Historical Association</title>
+<meta name="description" content="More than thirteen hundred historical photographs of Mountain View, California, from the Mountain View History Center and the City library — searchable by keyword, decade and topic.">
 <link rel="canonical" href="https://www.mountainviewhistorical.org/archive.html">
-<meta property="og:title" content="Photo Archive — Mountain View Historical Association">
-<meta property="og:description" content="Browse historical photographs of Mountain View, California from the Mountain View Historical Association archive. Filter by decade and topic, or search by keyword.">
+<meta property="og:title" content="Photographs — Mountain View Historical Association">
+<meta property="og:description" content="More than thirteen hundred historical photographs of Mountain View, California, from the Mountain View History Center and the City library — searchable by keyword, decade and topic.">
 <meta property="og:type" content="article">
 <meta property="og:image" content="https://www.mountainviewhistorical.org/wp-content/uploads/2018/06/Downtown-Mountain-Views-Castro-Street-in-1953.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/site.css?v=176fbe69">
+<link rel="stylesheet" href="assets/css/site.css?v=e4bdc72e">
 </head>
 <body>
 
@@ -59,22 +59,26 @@
             <a href="history-center.html">History Center</a>
           </div>
         </li>
-        <li class="has-sub"><a href="history.html">History</a>
+        <li><a href="archive.html">Photographs</a></li>
+        <li class="has-sub"><a href="archives.html">Archives</a>
           <div class="subnav">
-            <a href="history.html">History of Mountain View</a>
+            <a href="directories.html">City Directories</a>
             <a href="timeline.html">City Timeline</a>
-            <a href="archive.html">Photo Archive</a>
-            <a href="castro-legacy.html">Castro Family Legacy</a>
-            <a href="landmarks.html">Historical Landmarks</a>
-            <a href="directories.html">Historical Directories</a>
-            <a href="eagle-monument.html">MVHS Eagle Monument</a>
-            <a href="oldest-resident.html">Who&rsquo;s the Oldest?</a>
             <a href="videos.html">Video Gallery</a>
             <a href="links.html">Useful Links</a>
           </div>
         </li>
+        <li class="has-sub"><a href="books-articles.html">Books &amp; Articles</a>
+          <div class="subnav">
+            <a href="history.html">History of Mountain View</a>
+            <a href="castro-legacy.html">The Castro Family Legacy</a>
+            <a href="landmarks.html">Historical Landmarks</a>
+            <a href="oldest-resident.html">Who&rsquo;s the Oldest?</a>
+            <a href="eagle-monument.html">MVHS Eagle Monument</a>
+            <a href="news.html">News &amp; Stories</a>
+          </div>
+        </li>
         <li><a href="events.html">Events</a></li>
-        <li><a href="news.html">News</a></li>
         <li><a href="newsletters.html">Newsletters</a></li>
         <li class="has-sub"><a href="join.html">Get Involved</a>
           <div class="subnav">
@@ -97,9 +101,9 @@
 <main id="main">
 <section class="pagehead">
   <div class="wrap">
-    <p class="breadcrumb"><a href="index.html">Home</a><span>&rsaquo;</span><a href="history.html">History</a><span>&rsaquo;</span>Photo Archive</p>
-    <h1>Photo Archive</h1>
-    <p>Photographs from the Association&rsquo;s collection and the Mountain View History Center. Search by keyword, or narrow by decade and topic. Select any photograph to see it larger.</p>
+    <p class="breadcrumb"><a href="index.html">Home</a><span>&rsaquo;</span>Photographs</p>
+    <h1>Photographs</h1>
+    <p>More than thirteen hundred photographs of Mountain View, from the Association&rsquo;s own collection and from the Mountain View History Center. Search by keyword, or narrow by decade, topic and collection. Select any photograph to see it larger.</p>
   </div>
 </section>
 
@@ -109,7 +113,7 @@
     <div class="archive-toolbar">
       <div class="field">
         <label for="archive-q">Search photographs</label>
-        <input type="search" id="archive-q" data-archive-search placeholder="e.g. Castro, depot, orchard">
+        <input type="search" id="archive-q" data-archive-search placeholder="e.g. Castro, depot, orchard, Rengstorff">
       </div>
       <div class="field">
         <label for="archive-decade">Decade</label>
@@ -123,29 +127,46 @@
           <option value="">All topics</option>
         </select>
       </div>
+      <div class="field">
+        <label for="archive-collection">Collection</label>
+        <select id="archive-collection" data-archive-collection>
+          <option value="">All collections</option>
+        </select>
+      </div>
       <p class="result-count" data-archive-count></p>
     </div>
 
     <h2 class="visually-hidden">Photographs</h2>
     <div class="gallery" data-gallery>
-      <p>Loading the archive&hellip;</p>
+      <p>Loading the photographs&hellip;</p>
     </div>
+    <div class="btn-row btn-row--centre" data-gallery-more></div>
 
   </div>
 </section>
 
 <section class="section section--tint">
   <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Where these come from</p>
+      <h2>Held by the Internet Archive, not by us</h2>
+      <p>Most of the photographs above were digitised through <a href="https://californiarevealed.org/" target="_blank" rel="noopener">California Revealed</a>, a State Library programme, and are kept permanently by the Internet Archive. This website shows the Archive&rsquo;s pictures and links to them; it holds no copies of its own. That is deliberate &mdash; it means the photographs outlive any website, and that the record you reach is always the fullest one, with the original catalogue entry beside it.</p>
+      <p style="font-size:.92rem;color:var(--ink-faint)" data-archive-note></p>
+    </div>
+
     <div class="grid grid-2">
       <div class="card"><div class="card-body">
-        <h3>Looking for more?</h3>
-        <p>Many more photographs from the Mountain View History Center have been digitised and are searchable through the University of California&rsquo;s Calisphere website.</p>
-        <a class="btn btn--ghost" href="https://calisphere.org/collections/27188/" target="_blank" rel="noopener">Search Calisphere</a>
+        <h3>Browse the collections in full</h3>
+        <p>Both collections can be browsed and searched on the Internet Archive itself, where each photograph carries its complete catalogue record and can be downloaded at full size.</p>
+        <div class="btn-row">
+          <a class="btn btn--ghost" href="https://archive.org/details/mountain-view-historical-association" target="_blank" rel="noopener">Our collection</a>
+          <a class="btn btn--ghost" href="https://archive.org/details/mountainviewlibrary" target="_blank" rel="noopener">The City library&rsquo;s</a>
+        </div>
       </div></div>
       <div class="card"><div class="card-body">
         <h3>Have a photograph to share?</h3>
         <p>We are always looking to add to the archive. If you have photographs, documents or artifacts of local historical significance, we would like to hear from you.</p>
-        <a class="btn btn--ghost" href="donate.html">Donate to the archive</a>
+        <a class="btn btn--ghost" href="contact.html">Get in touch</a>
       </div></div>
     </div>
   </div>
@@ -161,6 +182,8 @@
     <div class="lightbox-caption">
       <h3 data-lb-title></h3>
       <p data-lb-text></p>
+      <p class="lightbox-credit" data-lb-credit></p>
+      <p><a class="lightbox-link" data-lb-link href="" target="_blank" rel="noopener" hidden>See the full record on the Internet Archive</a></p>
     </div>
   </div>
 </div>
@@ -185,12 +208,12 @@
       <div>
         <h3>Explore</h3>
         <ul>
+          <li><a href="archive.html">Photographs</a></li>
+          <li><a href="directories.html">City Directories</a></li>
+          <li><a href="archives.html">Archives</a></li>
+          <li><a href="books-articles.html">Books &amp; Articles</a></li>
           <li><a href="history.html">History of Mountain View</a></li>
           <li><a href="timeline.html">City Timeline</a></li>
-          <li><a href="archive.html">Photo Archive</a></li>
-          <li><a href="landmarks.html">Historical Landmarks</a></li>
-          <li><a href="castro-legacy.html">Castro Family Legacy</a></li>
-          <li><a href="videos.html">Video Gallery</a></li>
         </ul>
       </div>
 
@@ -224,6 +247,6 @@
   </div>
 </footer>
 
-<script src="assets/js/site.js?v=f75d4f4c"></script>
+<script src="assets/js/site.js?v=18f1fce3"></script>
 </body>
 </html>

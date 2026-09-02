@@ -196,66 +196,156 @@
     const mount = $('[data-gallery]');
     if (!mount) return;
 
-    const data = await loadData('photos');
-    if (!data) { mount.innerHTML = fallbackMessage(); return; }
+    /* Two sources, one gallery.
+       photos.json holds the photographs the Association added itself through
+       the editing panel. photos-ia.json is the catalogue of everything the
+       History Center and the City library digitised through California
+       Revealed, which lives permanently on the Internet Archive -- we keep no
+       copy of those and show the Archive's own thumbnail. If either file is
+       missing the page still works with the other. */
+    const results = await Promise.all([loadData('photos'), loadData('photos-ia')]);
+    const own = results[0], ia = results[1];
+    if (!own && !ia) { mount.innerHTML = fallbackMessage(); return; }
 
-    const photos = data.photos || [];
+    /* Only the identifier is stored for an Archive photograph. All three of
+       its addresses are built from it here, which keeps photos-ia.json about a
+       third smaller than it would otherwise be. */
+    function fromArchive(p) {
+      const base = 'https://archive.org/';
+      return {
+        id: p.id, title: p.title, date: p.date, decade: p.decade, topic: p.topic,
+        caption: p.caption, collection: p.collection, creator: p.creator || '',
+        rights: p.pd ? 'Public domain. No restrictions on use.' : 'Copyright status unknown.',
+        src: base + 'services/img/' + p.id,
+        full: base + 'download/' + p.id + '/' + p.id + (p.many ? '_f00001' : '') + '_access.jpg',
+        link: base + 'details/' + p.id
+      };
+    }
+
+    const photos = ((own && own.photos) || []).concat(((ia && ia.photos) || []).map(fromArchive));
+
     const qInput = $('[data-archive-search]');
     const decadeSel = $('[data-archive-decade]');
     const topicSel = $('[data-archive-topic]');
+    const placeSel = $('[data-archive-collection]');
     const counter = $('[data-archive-count]');
+    const moreWrap = $('[data-gallery-more]');
+    const notice = $('[data-archive-note]');
+
+    /* A page that tried to load thirteen hundred thumbnails at once would take
+       a long time to settle and would ask a great deal of the Internet Archive
+       for pictures nobody had scrolled to. So a screenful is shown, with a
+       button for the next. */
+    const PAGE = 60;
+    let shown = PAGE;
     let visible = photos.slice();
 
-    // Populate the filter dropdowns from the data itself.
+    function count(n) { return n.toLocaleString ? n.toLocaleString('en-US') : String(n); }
+
+    // Populate the filter menus from the data itself.
     if (decadeSel) {
       const decades = Array.from(new Set(photos.map(function (p) { return p.decade; })))
         .filter(function (d) { return typeof d === 'number'; })
         .sort(function (a, b) { return a - b; });
       decadeSel.insertAdjacentHTML('beforeend', decades.map(function (d) {
         return '<option value="' + d + '">' + d + 's</option>';
-      }).join(''));
+      }).join('') + '<option value="unknown">No date recorded</option>');
     }
     if (topicSel) {
-      const topics = data.topics || Array.from(new Set(photos.map(function (p) { return p.topic; })));
+      const order = ((own && own.topics) || []).concat((ia && ia.topics) || []);
+      const seen = {};
+      const topics = order.filter(function (t) {
+        if (!t || seen[t]) return false; seen[t] = true; return true;
+      });
       topicSel.insertAdjacentHTML('beforeend', topics.map(function (t) {
         return '<option value="' + esc(t) + '">' + esc(t) + '</option>';
       }).join(''));
+    }
+    /* Which collection holds a photograph is a different question from who took
+       it: photos.json may carry a photographer's credit, and everything in it
+       belongs to the Association. */
+    const OURS = 'Mountain View Historical Association';
+    photos.forEach(function (p) { if (!p.collection) p.collection = OURS; });
+
+    if (placeSel) {
+      const places = Array.from(new Set(photos.map(function (p) { return p.collection; })))
+        .filter(Boolean).sort();
+      placeSel.insertAdjacentHTML('beforeend', places.map(function (c) {
+        return '<option value="' + esc(c) + '">' + esc(c) + '</option>';
+      }).join(''));
+    }
+    if (notice && ia && ia.oralHistories) {
+      notice.innerHTML = 'The same collections hold ' + ia.oralHistories +
+        ' recorded oral history interviews, which are not photographs and so are not listed here. ' +
+        '<a href="https://archive.org/search?query=collection%3Amountainviewlibrary+AND+title%3A%22Interview+with%22" target="_blank" rel="noopener">Listen to them on the Internet Archive</a>.';
+    }
+
+    function card(p, i) {
+      return '<button type="button" class="photo" data-index="' + i + '" data-id="' + esc(p.id) + '">' +
+        '<span class="photo-img"><img src="' + esc(p.src) + '" alt="' + esc(p.title) + '" loading="lazy"></span>' +
+        '<span class="photo-meta">' +
+          '<span class="date">' + esc(p.date || 'Date unknown') + '</span>' +
+          '<h3>' + esc(p.title) + '</h3>' +
+          (p.caption ? '<p>' + esc(p.caption) + '</p>' : '') +
+        '</span>' +
+      '</button>';
+    }
+
+    function draw() {
+      mount.innerHTML = visible.length
+        ? visible.slice(0, shown).map(card).join('')
+        : '<div class="empty-state"><p>No photographs match those filters. Try clearing the search box or choosing “All”.</p></div>';
+
+      if (counter) {
+        counter.textContent = visible.length
+          ? 'Showing ' + count(Math.min(shown, visible.length)) + ' of ' + count(visible.length) +
+            ' photograph' + (visible.length === 1 ? '' : 's')
+          : 'No photographs found';
+      }
+      if (moreWrap) {
+        const left = visible.length - shown;
+        moreWrap.innerHTML = left > 0
+          ? '<button type="button" class="btn btn--ghost" data-more>Show ' +
+            count(Math.min(PAGE, left)) + ' more</button>'
+          : '';
+      }
     }
 
     function apply() {
       const q = (qInput && qInput.value.trim().toLowerCase()) || '';
       const dec = (decadeSel && decadeSel.value) || '';
       const top = (topicSel && topicSel.value) || '';
+      const place = (placeSel && placeSel.value) || '';
 
       visible = photos.filter(function (p) {
-        if (dec && String(p.decade) !== dec) return false;
+        if (dec === 'unknown') { if (typeof p.decade === 'number') return false; }
+        else if (dec && String(p.decade) !== dec) return false;
         if (top && p.topic !== top) return false;
+        if (place && p.collection !== place) return false;
         if (q) {
-          const hay = [p.title, p.caption, p.date, p.topic].join(' ').toLowerCase();
+          const hay = [p.title, p.caption, p.date, p.topic, p.creator].join(' ').toLowerCase();
           if (hay.indexOf(q) === -1) return false;
         }
         return true;
       });
-
-      mount.innerHTML = visible.length ? visible.map(function (p, i) {
-        return '<button type="button" class="photo" data-index="' + i + '" data-id="' + esc(p.id) + '">' +
-          '<span class="photo-img"><img src="' + esc(p.src) + '" alt="' + esc(p.title) + '" loading="lazy"></span>' +
-          '<span class="photo-meta">' +
-            '<span class="date">' + esc(p.date) + '</span>' +
-            '<h3>' + esc(p.title) + '</h3>' +
-            '<p>' + esc(p.caption) + '</p>' +
-          '</span>' +
-        '</button>';
-      }).join('') : '<div class="empty-state"><p>No photographs match those filters yet. Try clearing the search box or choosing “All”.</p></div>';
-
-      if (counter) {
-        counter.textContent = visible.length + ' of ' + photos.length + ' photograph' + (photos.length === 1 ? '' : 's');
-      }
+      shown = PAGE;
+      draw();
     }
 
     if (qInput) qInput.addEventListener('input', apply);
     if (decadeSel) decadeSel.addEventListener('change', apply);
     if (topicSel) topicSel.addEventListener('change', apply);
+    if (placeSel) placeSel.addEventListener('change', apply);
+    if (moreWrap) {
+      moreWrap.addEventListener('click', function (e) {
+        if (!e.target.closest('[data-more]')) return;
+        shown += PAGE;
+        const first = visible.length;
+        draw();
+        const next = mount.children[Math.min(shown - PAGE, first - 1)];
+        if (next && next.focus) next.focus();
+      });
+    }
     apply();
 
     /* ---- Lightbox ---- */
@@ -265,6 +355,8 @@
     const boxImg = $('[data-lb-img]', box);
     const boxTitle = $('[data-lb-title]', box);
     const boxText = $('[data-lb-text]', box);
+    const boxLink = $('[data-lb-link]', box);
+    const boxCredit = $('[data-lb-credit]', box);
     let current = 0;
     let lastFocus = null;
 
@@ -272,10 +364,27 @@
       if (!visible.length) return;
       current = (i + visible.length) % visible.length;
       const p = visible[current];
-      boxImg.src = p.src;
+
+      /* The Archive serves a large copy under a predictable address, but a
+         handful of items are filed differently. If the large copy does not
+         load, fall back to the thumbnail rather than showing a broken frame --
+         the link below it always goes to the item itself. */
+      boxImg.onerror = function () { boxImg.onerror = null; boxImg.src = p.src; };
+      boxImg.src = p.full || p.src;
       boxImg.alt = p.title;
       boxTitle.textContent = p.title;
-      boxText.textContent = [p.date, p.caption, p.credit].filter(Boolean).join(' — ');
+      boxText.textContent = [p.date, p.caption].filter(Boolean).join(' — ');
+      if (boxCredit) {
+        boxCredit.textContent = [p.creator, p.credit, p.collection, p.rights].filter(Boolean).join(' · ');
+      }
+      if (boxLink) {
+        if (p.link) {
+          boxLink.href = p.link;
+          boxLink.hidden = false;
+        } else {
+          boxLink.hidden = true;
+        }
+      }
       box.classList.add('is-open');
       document.body.style.overflow = 'hidden';
       $('.lightbox-close', box).focus();
@@ -308,11 +417,13 @@
       if (e.key === 'ArrowRight') show(current + 1);
     });
 
-    // Deep link: archive.html?photo=some-id opens straight to that photograph.
+    // Deep link: archive.html?photo=some-id opens straight to that photograph,
+    // even when it sits far past the first screenful.
     const wanted = new URLSearchParams(window.location.search).get('photo');
     if (wanted) {
       const idx = visible.findIndex(function (p) { return p.id === wanted; });
       if (idx > -1) {
+        if (idx >= shown) { shown = Math.ceil((idx + 1) / PAGE) * PAGE; draw(); }
         const card = $('[data-id="' + CSS.escape(wanted) + '"]', mount);
         if (card) {
           lastFocus = card;
@@ -480,7 +591,12 @@
     if (!mount) return;
 
     const data = await loadData('posts');
-    const posts = (data && data.posts) || [];
+    /* A page may ask for only the most recent few, by writing a number in the
+       attribute: data-news-list="3". The News page itself leaves it empty and
+       gets everything. */
+    const limit = Number(mount.dataset.newsList) || 0;
+    const all = (data && data.posts) || [];
+    const posts = limit ? all.slice(0, limit) : all;
 
     if (!posts.length) {
       mount.innerHTML = '<div class="empty-state">' +
@@ -1191,6 +1307,11 @@
       loadData('posts')
     ]);
 
+    /* The Internet Archive catalogue is fetched separately and folded in with
+       the Association's own photographs below, so that a search for a family
+       name or a street reaches all thirteen hundred of them. */
+    const archiveData = await loadData('photos-ia');
+
     // Build one flat index across pages, photographs and timeline milestones.
     const index = [];
 
@@ -1202,15 +1323,17 @@
         });
       });
     }
-    if (photosData) {
-      (photosData.photos || []).forEach(function (p) {
+    function indexPhotos(list) {
+      (list || []).forEach(function (p) {
         index.push({
           kind: 'Photograph', title: p.title, url: BASE + 'archive.html?photo=' + encodeURIComponent(p.id),
           snippet: [p.date, p.caption].filter(Boolean).join(' — '),
-          haystack: (p.title + ' ' + p.caption + ' ' + p.date + ' ' + p.topic).toLowerCase()
+          haystack: (p.title + ' ' + (p.caption || '') + ' ' + (p.date || '') + ' ' + p.topic).toLowerCase()
         });
       });
     }
+    if (photosData) indexPhotos(photosData.photos);
+    if (archiveData) indexPhotos(archiveData.photos);
     if (postsData) {
       (postsData.posts || []).forEach(function (p) {
         index.push({

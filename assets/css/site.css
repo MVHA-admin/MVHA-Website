@@ -536,6 +536,10 @@ blockquote cite { display: block; margin-top: .6rem; font-size: .9rem; font-styl
 .lightbox-caption { color: #e8e2d8; text-align: center; margin-top: 1.25rem; }
 .lightbox-caption h3 { color: #fff; font-size: 1.2rem; margin-bottom: .3rem; }
 .lightbox-caption p { font-size: .92rem; color: #b9b2a7; margin: 0; }
+.lightbox-caption .lightbox-credit { font-size: .82rem; color: #9a938a; margin-top: .4rem; }
+.lightbox-caption .lightbox-link { font-size: .88rem; color: #e8e2d8; text-decoration: underline; }
+.lightbox-caption .lightbox-link:hover { color: #fff; }
+.btn-row--centre { justify-content: center; margin-top: 2rem; }
 .lightbox-close, .lightbox-nav {
   position: absolute; background: rgba(255,255,255,.1); color: #fff;
   border: 1px solid rgba(255,255,255,.25); border-radius: var(--radius);

@@ -78,22 +78,49 @@ async function render(page, query) {
   check('shows a milestone count', /milestone/.test(doc.querySelector('[data-timeline-count]').textContent));
   check('first entry is the earliest', /Pre-1770/.test(tlItems[0].textContent), tlItems[0] && tlItems[0].textContent.slice(0, 40));
 
-  console.log('\nPhoto archive');
+  console.log('\nPhotographs');
   doc = await render('archive.html');
   const photos = doc.querySelectorAll('[data-gallery] .photo');
-  check(`renders photographs (${photos.length})`, photos.length === 42);
+  check(`shows one screenful, not the lot (${photos.length})`, photos.length === 60);
   check('every photo has an image with alt text',
     [...photos].every(p => p.querySelector('img') && p.querySelector('img').alt));
+  check('thumbnails come from the Internet Archive',
+    [...photos].some(p => /archive\.org\/services\/img\//.test(p.querySelector('img').src)));
   check('decade dropdown populated', doc.querySelectorAll('[data-archive-decade] option').length > 8);
-  check('topic dropdown populated', doc.querySelectorAll('[data-archive-topic] option').length === 8);
-  check('shows a result count', /of 42 photograph/.test(doc.querySelector('[data-archive-count]').textContent));
+  check('undated pictures can be filtered for',
+    [...doc.querySelectorAll('[data-archive-decade] option')].some(o => o.value === 'unknown'));
+  check('topic dropdown merges both files', doc.querySelectorAll('[data-archive-topic] option').length === 16);
+  check('collection dropdown populated', doc.querySelectorAll('[data-archive-collection] option').length === 3);
+  check('counts every match, not just the ones drawn',
+    /Showing 60 of 1,340 photographs/.test(doc.querySelector('[data-archive-count]').textContent),
+    doc.querySelector('[data-archive-count]').textContent);
+  check('offers the next screenful', !!doc.querySelector('[data-gallery-more] [data-more]'));
   check('lightbox markup present', !!doc.querySelector('#lightbox [data-lb-img]'));
+  check('lightbox can credit and link out',
+    !!doc.querySelector('#lightbox [data-lb-credit]') && !!doc.querySelector('#lightbox [data-lb-link]'));
+  check('mentions the oral histories left out',
+    /oral history/i.test(doc.querySelector('[data-archive-note]').textContent),
+    doc.querySelector('[data-archive-note]').textContent.slice(0, 60));
 
-  console.log('\nPhoto archive — deep link');
+  console.log('\nPhotographs — deep link');
   doc = await render('archive.html', '?photo=mayfield-mall');
   check('opens the lightbox', doc.querySelector('#lightbox').classList.contains('is-open'));
   check('lightbox shows the right photo', /Mayfield Mall/.test(doc.querySelector('[data-lb-title]').textContent),
     doc.querySelector('[data-lb-title]').textContent);
+
+  console.log('\nPhotographs — deep link past the first screenful');
+  doc = await render('archive.html', '?photo=cmv_001240');
+  check('draws enough of the gallery to reach it',
+    doc.querySelectorAll('[data-gallery] .photo').length > 60,
+    String(doc.querySelectorAll('[data-gallery] .photo').length));
+  check('opens the lightbox', doc.querySelector('#lightbox').classList.contains('is-open'));
+
+  console.log('\nBooks & Articles');
+  doc = await render('books-articles.html');
+  check('lists the most recent news, not all of it',
+    doc.querySelectorAll('[data-news-list] .news-item').length > 0 &&
+    doc.querySelectorAll('[data-news-list] .news-item').length <= 3,
+    String(doc.querySelectorAll('[data-news-list] .news-item').length));
 
   console.log('\nEvents');
   doc = await render('events.html');
@@ -222,7 +249,7 @@ async function render(page, query) {
   console.log('\nAdvanced search — source filters');
   doc = await render('search.html', '?q=castro');
   const sources = [...doc.querySelectorAll('[data-search-sources] .source')];
-  check(`offers one filter per source (${sources.length})`, sources.length === 4,
+  check(`offers one filter per source (${sources.length})`, sources.length === 5,
     sources.map(s => s.textContent.trim().split(/\s+/)[0]).join(', '));
   check('all sources are on by default',
     sources.every(s => s.querySelector('input').checked));
@@ -271,8 +298,10 @@ async function render(page, query) {
   const dirData = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/directory_index.json'), 'utf8'));
   doc = await render('directories.html');
   check(`loads the index (${dirData.count.toLocaleString()} entries)`, dirData.count > 80000);
+  // Checked against the data file rather than a number typed in here, so that
+  // adding directory years does not turn this test red for no reason.
   check('states how many entries there are',
-    /85,565 entries/.test(doc.querySelector('[data-dir-meta]').textContent),
+    doc.querySelector('[data-dir-meta]').textContent.includes(dirData.count.toLocaleString('en-US') + ' entries'),
     doc.querySelector('[data-dir-meta]').textContent);
   check('year dropdowns are populated',
     doc.querySelectorAll('[data-dir-from] option').length === dirData.years.length,

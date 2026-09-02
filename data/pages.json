@@ -26,16 +26,52 @@
       "body": "Mountain View History Center archives collect organize make available historical resources promote heritage founded 1967 partnership City of Mountain View Public Library second floor 585 Franklin Street books pamphlets purchase scrapbooks yearbooks diaries photographs maps artifacts hours Tuesdays 1 to 5 PM appointment docent"
     },
     {
-      "url": "history.html",
-      "title": "History of Mountain View",
-      "summary": "From Ohlone villages and Mexican ranchos to orchards and Silicon Valley.",
-      "body": "history of Mountain View California Ohlone indigenous Tamien Mexican era Castro family Rancho Pastoria de las Borregas Gold Rush pioneers stagecoach stop El Camino Real immigrants agricultural Valley of Heart's Delight Silicon Valley technology recommended books Milestones Mary Jo Ignoffo Images of America Nicholas Perry Then and Now"
+      "url": "archive.html",
+      "title": "Photo Archive",
+      "summary": "Browse historical photographs of Mountain View by decade and topic.",
+      "body": "photo archive photographs images historical pictures gallery browse search decade topic Castro Street depot Adobe Building Rengstorff House Moffett Field Hangar One Mayfield Mall Castro family Villa Francisca"
+    },
+    {
+      "url": "archives.html",
+      "title": "Archives",
+      "summary": "What the Association holds and how to search it — city directories, photographs, newsletters, the timeline and recorded talks.",
+      "body": "archives research search city directories 1870 1968 residents businesses names addresses photographs photograph collection Internet Archive California Revealed newsletters Mountain ReView timeline recorded lectures talks videos useful links family history house history genealogy History Center librarian Tuesday scrapbooks yearbooks diaries maps"
+    },
+    {
+      "url": "directories.html",
+      "title": "Historical Directories",
+      "summary": "Search 85,000 residents and businesses from the city directories, 1870–1952.",
+      "body": "historical directories city directory Polk residents businesses names occupations addresses 1870 1952 genealogy family history search by name street occupation year range residence business listing blacksmith grocer saloon teacher farmer orchard El Camino Castro Street ancestors trace a family trace a building"
     },
     {
       "url": "timeline.html",
       "title": "City Timeline",
       "summary": "A milestone-by-milestone timeline of Mountain View from before 1770 to today.",
       "body": "timeline milestones chronology city history dates years founding incorporation 1902 railroad 1864 Castro Street Moffett Field Hangar One Adobe Building Shockley Intel Google Netscape Khan Academy Shoreline Amphitheatre Rengstorff House Mayfield Mall"
+    },
+    {
+      "url": "videos.html",
+      "title": "Video Gallery",
+      "summary": "Recorded lectures and webinars on Mountain View history.",
+      "body": "video gallery videos webinars lectures recordings YouTube channel Pacific Press Shoreline West Stevens Creek Rengstorff House women's suffrage Votes for MV Women Castro Street past present future Silicon Valley East Whisman"
+    },
+    {
+      "url": "links.html",
+      "title": "Useful Links",
+      "summary": "Other organisations preserving the history of the Santa Clara Valley.",
+      "body": "useful links resources Calisphere photo archive City of Mountain View history page Friends of the Rengstorff House Moffett Field Museum Los Altos History Museum Palo Alto Historical Association Sunnyvale Heritage Park Museum California Pioneers of Santa Clara County History San Jose genealogical society Computer History Museum San Jose Public Library California Room"
+    },
+    {
+      "url": "books-articles.html",
+      "title": "Books & Articles",
+      "summary": "Articles on the history of Mountain View written by the Association, and the three books we recommend for reading further.",
+      "body": "books articles reading history Mountain View Castro family legacy historical landmarks who is the oldest resident MVHS Eagles monument news stories Milestones Mary Jo Ignoffo Images of America Nicholas Perry Then and Now Mountain View Public Library History Center newsletter Mountain ReView"
+    },
+    {
+      "url": "history.html",
+      "title": "History of Mountain View",
+      "summary": "From Ohlone villages and Mexican ranchos to orchards and Silicon Valley.",
+      "body": "history of Mountain View California Ohlone indigenous Tamien Mexican era Castro family Rancho Pastoria de las Borregas Gold Rush pioneers stagecoach stop El Camino Real immigrants agricultural Valley of Heart's Delight Silicon Valley technology recommended books Milestones Mary Jo Ignoffo Images of America Nicholas Perry Then and Now"
     },
     {
       "url": "castro-legacy.html",
@@ -56,28 +92,10 @@
       "body": "MVHS Eagle monument Mountain View High School 1975 football team CCS championship dedication December 16 2023 Eagle Park High School Way Alberto Olmos Pamela Baird Mark Perry Susan Metcalf bronze eagle sculpture interpretive plaque You Gotta Believe alumni reunion Parks and Recreation"
     },
     {
-      "url": "archive.html",
-      "title": "Photo Archive",
-      "summary": "Browse historical photographs of Mountain View by decade and topic.",
-      "body": "photo archive photographs images historical pictures gallery browse search decade topic Castro Street depot Adobe Building Rengstorff House Moffett Field Hangar One Mayfield Mall Castro family Villa Francisca"
-    },
-    {
-      "url": "directories.html",
-      "title": "Historical Directories",
-      "summary": "Search 85,000 residents and businesses from the city directories, 1870–1952.",
-      "body": "historical directories city directory Polk residents businesses names occupations addresses 1870 1952 genealogy family history search by name street occupation year range residence business listing blacksmith grocer saloon teacher farmer orchard El Camino Castro Street ancestors trace a family trace a building"
-    },
-    {
-      "url": "videos.html",
-      "title": "Video Gallery",
-      "summary": "Recorded lectures and webinars on Mountain View history.",
-      "body": "video gallery videos webinars lectures recordings YouTube channel Pacific Press Shoreline West Stevens Creek Rengstorff House women's suffrage Votes for MV Women Castro Street past present future Silicon Valley East Whisman"
-    },
-    {
-      "url": "events.html",
-      "title": "Events",
-      "summary": "Quarterly membership meetings, walking tours, and community events.",
-      "body": "events quarterly meetings walking tours downtown Mountain View Centennial Plaza Adobe Building register Eventbrite ice cream social harvest history festival Heritage Park Eagle alumni picnic past events archive"
+      "url": "oldest-resident.html",
+      "title": "Who's the Oldest?",
+      "summary": "Meet Lloyd Lettis, the WWII veteran named Mountain View's oldest living resident.",
+      "body": "oldest living resident competition Lloyd Lettis 104 WWII veteran World War II US Army Air Forces radar Watsonville apple orchards Croatia Myrtle UC Berkeley 1952 home $13,000 apricot orchards Boy Scout PTA Suzanne Epstein Elzene Yancey Carol Donahue Emily Margaretten"
     },
     {
       "url": "news.html",
@@ -86,10 +104,16 @@
       "body": "news stories blog announcements articles archives history Mountain View Historical Association updates posts"
     },
     {
-      "url": "oldest-resident.html",
-      "title": "Who's the Oldest?",
-      "summary": "Meet Lloyd Lettis, the WWII veteran named Mountain View's oldest living resident.",
-      "body": "oldest living resident competition Lloyd Lettis 104 WWII veteran World War II US Army Air Forces radar Watsonville apple orchards Croatia Myrtle UC Berkeley 1952 home $13,000 apricot orchards Boy Scout PTA Suzanne Epstein Elzene Yancey Carol Donahue Emily Margaretten"
+      "url": "events.html",
+      "title": "Events",
+      "summary": "Quarterly membership meetings, walking tours, and community events.",
+      "body": "events quarterly meetings walking tours downtown Mountain View Centennial Plaza Adobe Building register Eventbrite ice cream social harvest history festival Heritage Park Eagle alumni picnic past events archive"
+    },
+    {
+      "url": "newsletters.html",
+      "title": "Newsletters",
+      "summary": "The Mountain ReView, our quarterly newsletter — searchable back issues, free to read online.",
+      "body": "newsletter Mountain ReView quarterly newsletter articles history events activities digital edition print edition members submit stories photos archive since 1995 back issues search inside full text PDF searchable"
     },
     {
       "url": "join.html",
@@ -114,18 +138,6 @@
       "title": "Volunteer",
       "summary": "Walking tour docent, History Center docent, outreach, board service and more.",
       "body": "volunteer opportunities no experience required walking tour docent History Center docent program community outreach tabling ice cream socials board of directors educational programs schools event staffing Adobe Building communications newsletter editor social media writing"
-    },
-    {
-      "url": "newsletters.html",
-      "title": "Newsletters",
-      "summary": "The Mountain ReView, our quarterly newsletter — searchable back issues, free to read online.",
-      "body": "newsletter Mountain ReView quarterly newsletter articles history events activities digital edition print edition members submit stories photos archive since 1995 back issues search inside full text PDF searchable"
-    },
-    {
-      "url": "links.html",
-      "title": "Useful Links",
-      "summary": "Other organisations preserving the history of the Santa Clara Valley.",
-      "body": "useful links resources Calisphere photo archive City of Mountain View history page Friends of the Rengstorff House Moffett Field Museum Los Altos History Museum Palo Alto Historical Association Sunnyvale Heritage Park Museum California Pioneers of Santa Clara County History San Jose genealogical society Computer History Museum San Jose Public Library California Room"
     },
     {
       "url": "contact.html",
