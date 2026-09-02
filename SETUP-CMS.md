@@ -147,6 +147,17 @@ Python folder, the `.zip` packages, and macOS's `.DS_Store` clutter.
 
 ## Step 2 — Put it on the web with Cloudflare
 
+> **A note on the menu.** Cloudflare has reorganised its sidebar since these
+> steps were written. **Workers & Pages** still exists, but it is now nested:
+> look under **Compute** in the left-hand sidebar, in the "Build" group. The **Domains** section is a different thing entirely — it lists
+> domains whose DNS Cloudflare manages, and it is correctly empty until MVHA
+> moves a real domain here. The site being on a `workers.dev` address does not
+> put anything in it.
+>
+> Expect this to drift again. If a menu named here does not exist, look for the
+> thing rather than the path, or use the search box at the top of the dashboard.
+
+
 Cloudflare has two ways of hosting a site like this. The older one is called
 **Pages**; the dashboard now labels it "the legacy Pages workflow". The
 current one is **Workers**. This project is set up for Workers, so that
@@ -157,7 +168,7 @@ are already in the folder. You do not need to edit either.
 
 1. Make sure the account switcher at the top left is on the **MVHA account**,
    not your personal one.
-2. Go to **Workers & Pages → Create application**.
+2. Go to **Compute → Workers & Pages → Create application**.
 3. On the "Make something new" screen choose **Continue with GitHub**.
    (Ignore the "Continue to Pages" link at the bottom — that is the legacy
    route.)
@@ -223,7 +234,7 @@ could read.
 
    It follows exactly the same pattern as the site's. Every Worker in the
    account is `<worker name>.<your subdomain>.workers.dev`, and this
-   account's subdomain is shown on the Workers & Pages page under **Account
+   account's subdomain is shown on the Compute → Workers & Pages page under **Account
    details → Subdomain**. So if the site is at
 
        mvha-website.mvha.workers.dev
@@ -232,7 +243,7 @@ could read.
 
        sveltia-cms-auth.mvha.workers.dev
 
-   To see it rather than predict it: **Workers & Pages → sveltia-cms-auth**,
+   To see it rather than predict it: **Compute → Workers & Pages → sveltia-cms-auth**,
    and the address is on that project's page. Copy whatever it actually says.
 
 You will need that address twice below — once as the GitHub callback URL
@@ -289,7 +300,7 @@ things — which GitHub app it is, the password proving it really is that app,
 and which website is allowed to use it. Until it has all three it cannot talk
 to GitHub, which is why sign-in still fails at this point.
 
-Go to **Workers & Pages → sveltia-cms-auth → Settings → Runtime variables and
+Go to **Compute → Workers & Pages → sveltia-cms-auth → Settings → Runtime variables and
 secrets**, and press **Add variable** three times:
 
 | Type | Name | Value |
@@ -353,7 +364,7 @@ You should get a **Sign in with GitHub** button. Sign in, and you should see
 four sections: News & Stories, Events, Photographs, and Board of Directors.
 
 Make a small change — add a full stop somewhere — and press **Publish**.
-Then watch **Workers & Pages → your project → Deployments** in Cloudflare:
+Then watch **Compute → Workers & Pages → your project → Deployments** in Cloudflare:
 a new build starts within a few seconds and the change is live when it
 finishes.
 
