@@ -3,17 +3,6 @@
   "registrationUrl": "https://www.eventbrite.com/o/mountain-view-historical-association-10030194297",
   "events": [
     {
-      "id": "new-website",
-      "title": "Great new website!",
-      "date": "2026-09-22",
-      "time": "1:30pm",
-      "venue": "Mountain View Public Library",
-      "address": "585 Franklin Street, Mountain View, CA 94041",
-      "description": "Come hear about the new website!",
-      "registerUrl": "",
-      "image": "/assets/images/IMG_0091.jpeg"
-    },
-    {
       "id": "sharing-the-spirit-2026",
       "title": "Sharing the Spirit: Reflections on America's 250th",
       "date": "2026-08-09",
