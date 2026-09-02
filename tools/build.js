@@ -57,7 +57,7 @@ const NAV = [
     { label: 'Our History', href: 'our-history.html' },
     { label: 'History Center', href: 'history-center.html' }
   ]},
-  { label: 'Photographs', href: 'archive.html' },
+  { label: 'Photos', href: 'archive.html' },
   { label: 'Archives', href: 'archives.html', children: [
     { label: 'City Directories', href: 'directories.html' },
     { label: 'City Timeline', href: 'timeline.html' },
@@ -169,7 +169,7 @@ ${socialHtml()}
       <div>
         <h3>Explore</h3>
         <ul>
-          <li><a href="archive.html">Photographs</a></li>
+          <li><a href="archive.html">Photos</a></li>
           <li><a href="directories.html">City Directories</a></li>
           <li><a href="archives.html">Archives</a></li>
           <li><a href="books-articles.html">Books &amp; Articles</a></li>
