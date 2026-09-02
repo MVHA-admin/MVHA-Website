@@ -11,9 +11,27 @@ Go to **[the address you were given]/admin** and press **Sign in with
 GitHub**.
 
 You will have been sent an invitation by email first — accept that before
-your first sign-in, or the page will say it cannot find the site.
+your first sign-in, or the page will say it cannot find the site. This is by
+far the most common reason a first sign-in does not work.
 
-You stay signed in, so this is usually a one-off.
+### The permission screen
+
+The first time, GitHub shows a screen headed **Authorize MVHA website
+editor**, asking for access to your repositories, public and private.
+
+That request looks broader than it is. It is the only setting GitHub offers
+for this kind of sign-in — there is no way to ask for one project only — and
+the editing panel never touches anything except the Association's website.
+If you keep private projects of your own on GitHub, nothing here reads or
+changes them.
+
+You can withdraw it whenever you like: on GitHub, **Settings → Applications
+→ Authorized OAuth Apps → MVHA website editor → Revoke**.
+
+Check the line at the bottom of that screen says it will redirect to
+`sveltia-cms-auth.mvha.workers.dev`, then press **Authorize**.
+
+You stay signed in afterwards, so this is a one-off.
 
 ---
 
