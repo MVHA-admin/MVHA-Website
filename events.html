@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/site.css?v=e4bdc72e">
+<link rel="stylesheet" href="assets/css/site.css?v=369d4079">
 </head>
 <body>
 
@@ -152,6 +152,24 @@
     <div class="grid grid-2 prose" data-events-archive></div>
   </div>
 </section>
+
+<!-- One event, in full. Opened by selecting an event above, or by going
+     straight to events.html?event=some-id -->
+<div class="lightbox event-detail" id="event-detail" role="dialog" aria-modal="true" aria-labelledby="event-detail-title">
+  <button class="lightbox-close" type="button" aria-label="Close">&times;</button>
+  <div class="lightbox-inner">
+    <div class="event-detail-card">
+      <img class="event-detail-img" data-ed-img src="" alt="" hidden>
+      <div class="event-detail-body">
+        <p class="eyebrow" data-ed-when></p>
+        <h2 id="event-detail-title" data-ed-title></h2>
+        <p class="where" data-ed-where></p>
+        <p class="desc" data-ed-desc></p>
+        <div class="btn-row" data-ed-actions></div>
+      </div>
+    </div>
+  </div>
+</div>
 </main>
 
 <footer class="footer">
@@ -212,6 +230,6 @@
   </div>
 </footer>
 
-<script src="assets/js/site.js?v=18f1fce3"></script>
+<script src="assets/js/site.js?v=e6e3a918"></script>
 </body>
 </html>

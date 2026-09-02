@@ -572,9 +572,41 @@ blockquote cite { display: block; margin-top: .6rem; font-size: .9rem; font-styl
 .event-body .desc { font-size: .93rem; color: var(--ink-soft); margin: .5rem 0 0; }
 .event-actions { display: flex; flex-direction: column; gap: .5rem; }
 
+/* An event with a flyer or photograph gets a column for it. */
+.event--illustrated { grid-template-columns: 96px 132px 1fr auto; }
+.event-thumb { display: block; border-radius: var(--radius); overflow: hidden; background: var(--paper-2); }
+.event-thumb img { display: block; width: 100%; height: 100%; max-height: 150px; object-fit: cover; }
+.event-body h3 a { color: inherit; text-decoration: none; }
+.event-body h3 a:hover, .event-body h3 a:focus { color: var(--green); text-decoration: underline; }
+
+/* One event, opened over the list. It reuses the lightbox backdrop, but the
+   panel itself is a light card rather than a picture on black. */
+.event-detail .lightbox-inner { max-width: 760px; }
+.event-detail-card {
+  background: var(--card); border-radius: var(--radius); overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0,0,0,.35);
+}
+/* Written to beat ".lightbox img", which is meant for a photograph on black
+   and would otherwise let a portrait flyer fill the whole panel. */
+.event-detail .event-detail-img {
+  display: block; width: 100%; max-width: 100%; max-height: 38vh;
+  object-fit: contain; background: var(--paper-2); border-radius: 0; margin: 0;
+}
+.event-detail-body { padding: 1.75rem 2rem 2rem; }
+.event-detail-body h2 { font-size: 1.5rem; margin: .15rem 0 .6rem; }
+.event-detail-body .where { font-size: .95rem; color: var(--ink-faint); margin: 0 0 1rem; }
+.event-detail-body .desc { font-size: 1rem; color: var(--ink-soft); margin: 0 0 1.5rem; }
+.event-detail-body .btn-row { margin: 0; }
+
 @media (max-width: 720px) {
   .event { grid-template-columns: 76px 1fr; }
+  /* On a telephone the picture goes full width above the words, rather than
+     squeezing the title into a narrow column beside it. */
+  .event--illustrated { grid-template-columns: 76px 1fr; }
+  .event-thumb { grid-column: 1 / -1; order: -1; }
+  .event-thumb img { max-height: 200px; }
   .event-actions { grid-column: 1 / -1; flex-direction: row; }
+  .event-detail-body { padding: 1.25rem 1.25rem 1.5rem; }
 }
 
 .empty-state {

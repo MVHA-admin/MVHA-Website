@@ -458,28 +458,62 @@
     const past = all.filter(function (e) { return parseDate(e.date) < today; })
                     .sort(function (a, b) { return parseDate(b.date) - parseDate(a.date); });
 
+    /* Every event needs a name of its own, because each one can now be opened
+       on its own and linked to. Most carry an id already; anything older that
+       does not gets one made from its date and title. */
+    function slugFor(e) {
+      if (e.id) return e.id;
+      return (e.date + '-' + e.title).toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
+    }
+
+    const byId = {};
+    all.forEach(function (e) { byId[slugFor(e)] = e; });
+
+    function mapUrl(e) {
+      const where = [e.venue, e.address].filter(Boolean).join(', ');
+      return where ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(where) : '';
+    }
+
+    function icsButton(e, label) {
+      return '<a class="btn btn--ghost" href="#" data-ics=\'' + esc(JSON.stringify({
+        title: e.title, date: e.date, venue: e.venue, address: e.address, description: e.description || ''
+      })) + '\'>' + label + '</a>';
+    }
+
     function eventCard(e, opts) {
       opts = opts || {};
       const d = parseDate(e.date);
+      const id = slugFor(e);
+      const href = BASE + 'events.html?event=' + encodeURIComponent(id);
+
+      /* Nothing can be registered for or added to a calendar once it has
+         happened, and an event moves itself into the past on the day. */
+      const past = d < today;
       const actions = [];
-      if (e.registerUrl) {
+      if (e.registerUrl && !past) {
         actions.push('<a class="btn btn--primary" href="' + esc(e.registerUrl) + '" target="_blank" rel="noopener">Register</a>');
       }
-      if (!opts.compact) {
-        actions.push('<a class="btn btn--ghost" href="#" data-ics=\'' + esc(JSON.stringify({
-          title: e.title, date: e.date, venue: e.venue, address: e.address, description: e.description || ''
-        })) + '\'>Add to calendar</a>');
-      }
+      if (!opts.compact && !past) actions.push(icsButton(e, 'Add to calendar'));
 
-      return '<article class="event">' +
+      /* The picture is decorative here -- the title beside it says the same
+         thing and is the link a screen reader should read -- so it carries an
+         empty alt and is skipped by the keyboard. */
+      const thumb = e.image
+        ? '<a class="event-thumb" href="' + href + '" data-event-open="' + esc(id) + '" tabindex="-1" aria-hidden="true">' +
+            '<img src="' + esc(e.image) + '" alt="" loading="lazy"></a>'
+        : '';
+
+      return '<article class="event' + (e.image ? ' event--illustrated' : '') + '">' +
         '<div class="event-date">' +
           '<span class="mon">' + MONTHS[d.getMonth()] + '</span>' +
           '<span class="day">' + d.getDate() + '</span>' +
           '<span class="yr">' + d.getFullYear() + '</span>' +
         '</div>' +
+        thumb +
         '<div class="event-body">' +
-          '<h3>' + esc(e.title) + '</h3>' +
-          '<p class="where">' + esc([e.time, e.venue, e.address].filter(Boolean).join(' · ')) + '</p>' +
+          '<h3><a href="' + href + '" data-event-open="' + esc(id) + '">' + esc(e.title) + '</a></h3>' +
+          '<p class="where">' + esc([e.time, e.venue, e.address].filter(Boolean).join(' \u00b7 ')) + '</p>' +
           (e.description ? '<p class="desc">' + esc(e.description) + '</p>' : '') +
         '</div>' +
         (actions.length ? '<div class="event-actions">' + actions.join('') + '</div>' : '') +
@@ -518,6 +552,118 @@
           yr.items.map(function (i) { return '<li>' + esc(i) + '</li>'; }).join('') +
         '</ul></div>';
       }).join('');
+    }
+
+    /* ---- One event, in full ----------------------------------------
+       Events are read from data/events.json in the browser, so that the board
+       can add one in the editing panel and see it straight away without a
+       rebuild. That rules out giving each event a page of its own -- a page
+       would only exist after a build. Instead the whole entry opens over the
+       list, with an address of its own (events.html?event=...) that can be
+       sent to somebody, and the browser's back button closes it. */
+
+    const detail = $('#event-detail');
+    if (detail) {
+      const dImg = $('[data-ed-img]', detail);
+      const dWhen = $('[data-ed-when]', detail);
+      const dTitle = $('[data-ed-title]', detail);
+      const dWhere = $('[data-ed-where]', detail);
+      const dDesc = $('[data-ed-desc]', detail);
+      const dActions = $('[data-ed-actions]', detail);
+      let lastFocus = null;
+      let pushed = false;
+
+      function fill(e) {
+        const d = parseDate(e.date);
+        const past = d < today;
+
+        if (e.image) {
+          dImg.src = e.image;
+          dImg.alt = 'Flyer for ' + e.title;
+          dImg.hidden = false;
+        } else {
+          dImg.hidden = true;
+          dImg.removeAttribute('src');
+        }
+
+        dWhen.textContent = (past ? 'Held on ' : '') + formatDateLong(e.date) +
+          (e.time ? ' \u00b7 ' + e.time : '');
+        dTitle.textContent = e.title;
+
+        const map = mapUrl(e);
+        const where = esc([e.venue, e.address].filter(Boolean).join(', '));
+        dWhere.innerHTML = where
+          ? (map ? '<a href="' + map + '" target="_blank" rel="noopener">' + where + '</a>' : where)
+          : '';
+
+        /* Older entries were kept as a line in a list and never had a
+           description. Saying so is better than an empty space. */
+        dDesc.innerHTML = e.description
+          ? esc(e.description)
+          : (past
+              ? 'We have not kept a description of this one. Several past talks were recorded and are in the ' +
+                '<a href="' + BASE + 'videos.html">video gallery</a>, and most were written up afterwards in ' +
+                '<a href="' + BASE + 'newsletters.html">The Mountain ReView</a>.'
+              : 'Full details to follow.');
+
+        const acts = [];
+        if (e.registerUrl && !past) {
+          acts.push('<a class="btn btn--primary" href="' + esc(e.registerUrl) + '" target="_blank" rel="noopener">Register</a>');
+        }
+        if (!past) acts.push(icsButton(e, 'Add to calendar'));
+        if (map) acts.push('<a class="btn btn--ghost" href="' + map + '" target="_blank" rel="noopener">Open the map</a>');
+        dActions.innerHTML = acts.join('');
+      }
+
+      function openEvent(id, viaLink) {
+        const e = byId[id];
+        if (!e) return false;
+        fill(e);
+        detail.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+        $('.lightbox-close', detail).focus();
+        if (viaLink && window.history && history.pushState) {
+          history.pushState({ event: id }, '', BASE + 'events.html?event=' + encodeURIComponent(id));
+          pushed = true;
+        }
+        return true;
+      }
+
+      function closeEvent(fromHistory) {
+        if (!detail.classList.contains('is-open')) return;
+        detail.classList.remove('is-open');
+        document.body.style.overflow = '';
+        if (lastFocus && lastFocus.focus) lastFocus.focus();
+        if (!fromHistory && window.history && history.pushState) {
+          if (pushed) { pushed = false; history.back(); }
+          else history.replaceState({}, '', BASE + 'events.html');
+        }
+      }
+
+      document.addEventListener('click', function (ev) {
+        const link = ev.target.closest('[data-event-open]');
+        if (link) {
+          ev.preventDefault();
+          lastFocus = link;
+          openEvent(link.dataset.eventOpen, true);
+          return;
+        }
+        if (ev.target === detail || ev.target.closest('#event-detail .lightbox-close')) closeEvent();
+      });
+
+      document.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Escape' && detail.classList.contains('is-open')) closeEvent();
+      });
+
+      window.addEventListener('popstate', function (ev) {
+        const id = ev.state && ev.state.event;
+        pushed = false;
+        if (id) openEvent(id, false); else closeEvent(true);
+      });
+
+      // events.html?event=some-id opens straight to that event.
+      const wanted = new URLSearchParams(window.location.search).get('event');
+      if (wanted) openEvent(wanted, false);
     }
 
     // "Add to calendar" — builds an .ics file in the browser, no server needed.

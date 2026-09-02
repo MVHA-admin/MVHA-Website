@@ -129,6 +129,47 @@ async function render(page, query) {
   check('past events render', doc.querySelectorAll('[data-events-past] .event').length > 5);
   check('annual events render', doc.querySelectorAll('[data-events-annual] .card').length === 3);
   check('programme archive renders', doc.querySelectorAll('[data-events-archive] li').length > 15);
+  // Looked for anywhere on the page rather than under "upcoming", because
+  // whether the one event that has a flyer is still in the future depends on
+  // the day this is run.
+  check('an event with a flyer shows it',
+    !!doc.querySelector('.event--illustrated .event-thumb img'),
+    doc.querySelectorAll('.event--illustrated').length + ' illustrated');
+  check('every event title links to that event on its own',
+    [...doc.querySelectorAll('.event .event-body h3 a')].every(a => /events\.html\?event=/.test(a.getAttribute('href'))),
+    doc.querySelector('.event .event-body h3 a') ? doc.querySelector('.event .event-body h3 a').getAttribute('href') : 'no link');
+  check('past events can be opened too',
+    doc.querySelectorAll('[data-events-past] [data-event-open]').length > 5);
+  check('the detail panel starts closed',
+    !doc.querySelector('#event-detail').classList.contains('is-open'));
+
+  console.log('\nEvents — one event in full');
+  doc = await render('events.html', '?event=sharing-the-spirit-2026');
+  const ed = doc.querySelector('#event-detail');
+  check('opens the panel', ed.classList.contains('is-open'));
+  check('names the event', /Sharing the Spirit/.test(doc.querySelector('[data-ed-title]').textContent),
+    doc.querySelector('[data-ed-title]').textContent);
+  check('gives the date in full', /August/.test(doc.querySelector('[data-ed-when]').textContent),
+    doc.querySelector('[data-ed-when]').textContent);
+  check('links the address to a map',
+    /google\.com\/maps/.test(doc.querySelector('[data-ed-where]').innerHTML));
+  check('shows the flyer', !doc.querySelector('[data-ed-img]').hidden);
+  check('offers the map', /Open the map/.test(doc.querySelector('[data-ed-actions]').textContent),
+    doc.querySelector('[data-ed-actions]').textContent.trim());
+
+  doc = await render('events.html', '?event=walking-tour-2026-02');
+  check('a past event says it is past',
+    /^Held on/.test(doc.querySelector('[data-ed-when]').textContent),
+    doc.querySelector('[data-ed-when]').textContent);
+  check('says so honestly when no description was kept',
+    /video gallery|Mountain ReView/.test(doc.querySelector('[data-ed-desc]').innerHTML));
+  check('offers no Register button for something already held',
+    !/Register/.test(doc.querySelector('[data-ed-actions]').textContent),
+    doc.querySelector('[data-ed-actions]').textContent.trim());
+
+  doc = await render('events.html', '?event=not-a-real-event');
+  check('an address that names nothing just shows the page',
+    !doc.querySelector('#event-detail').classList.contains('is-open'));
 
   console.log('\nBoard of Directors');
   doc = await render('about.html');

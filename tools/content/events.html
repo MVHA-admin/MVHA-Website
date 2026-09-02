@@ -59,3 +59,21 @@
     <div class="grid grid-2 prose" data-events-archive></div>
   </div>
 </section>
+
+<!-- One event, in full. Opened by selecting an event above, or by going
+     straight to events.html?event=some-id -->
+<div class="lightbox event-detail" id="event-detail" role="dialog" aria-modal="true" aria-labelledby="event-detail-title">
+  <button class="lightbox-close" type="button" aria-label="Close">&times;</button>
+  <div class="lightbox-inner">
+    <div class="event-detail-card">
+      <img class="event-detail-img" data-ed-img src="" alt="" hidden>
+      <div class="event-detail-body">
+        <p class="eyebrow" data-ed-when></p>
+        <h2 id="event-detail-title" data-ed-title></h2>
+        <p class="where" data-ed-where></p>
+        <p class="desc" data-ed-desc></p>
+        <div class="btn-row" data-ed-actions></div>
+      </div>
+    </div>
+  </div>
+</div>
