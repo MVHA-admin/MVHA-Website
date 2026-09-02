@@ -25,8 +25,22 @@ the editing panel never touches anything except the Association's website.
 If you keep private projects of your own on GitHub, nothing here reads or
 changes them.
 
-You can withdraw it whenever you like: on GitHub, **Settings → Applications
-→ Authorized OAuth Apps → MVHA website editor → Revoke**.
+GitHub also shows a grey box underneath saying the app is **not owned or
+operated by GitHub**, was **created recently**, and has **fewer than 10
+users**. All three are true and none is a problem: the sign-in gatekeeper was
+built for this website alone, by us, and there are only ever going to be a
+handful of people using it. GitHub shows that box for every application it did
+not write itself.
+
+If the screen lists **Organization access** with the Mountain View Historical
+Association beside it, that has to be granted too, or the panel will sign you
+in and then find nothing to edit. If there is a **Grant** button there and it
+does not work for you, that is normal — only an organisation owner can press
+it. Ask Craig, and he can approve it once for everybody.
+
+You can withdraw the whole permission whenever you like: on GitHub,
+**Settings → Applications → Authorized OAuth Apps → MVHA website editor →
+Revoke**.
 
 Check the line at the bottom of that screen says it will redirect to
 `sveltia-cms-auth.mvha.workers.dev`, then press **Authorize**.
@@ -42,7 +56,7 @@ Four sections down the left-hand side:
 | Section | What it controls |
 | --- | --- |
 | **News & Stories** | Short articles and announcements on the News page |
-| **Events** | Upcoming and past events, and the annual calendar |
+| **Events** | Every event, and the annual community calendar |
 | **Photographs** | The photo archive |
 | **Board of Directors** | The names and biographies on the About page |
 

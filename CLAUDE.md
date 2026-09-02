@@ -23,7 +23,7 @@ files. Content lives in `data/*.json` and `tools/content/`.
 | --- | --- |
 | Test site | https://mvha-website.mvha.workers.dev |
 | Editing panel | https://mvha-website.mvha.workers.dev/admin |
-| Repository | github.com/mountain-view-historical/mvha-website (private) |
+| Repository | github.com/mountain-view-historical/mvha-website — **public**, deliberately (SETUP-CMS.md step 5: nothing in it is not already published on the web, and the OAuth secret lives in the Worker's variables, not the repo). Earlier versions of this file said "private"; that was wrong. |
 | Sign-in gatekeeper | https://sveltia-cms-auth.mvha.workers.dev |
 | Cloudflare | separate MVHA account, subdomain `mvha.workers.dev` |
 | GitHub | organisation `mountain-view-historical`. `MVHA-admin` is the account that created it and still owns the sign-in gatekeeper repo. |
