@@ -8,12 +8,12 @@
 
 /about-the-association                     /about.html                301
 /about-the-association/                    /about.html                301
-/our-history                               /our-history.html          301
-/our-history/                              /our-history.html          301
+# /our-history                               /our-history.html          301   <- removed: caused a redirect loop on Cloudflare
+# /our-history/                              /our-history.html          301   <- removed: caused a redirect loop on Cloudflare
 /mountain-view-history-center              /history-center.html       301
 /mountain-view-history-center/             /history-center.html       301
-/history                                   /history.html              301
-/history/                                  /history.html              301
+# /history                                   /history.html              301   <- removed: caused a redirect loop on Cloudflare
+# /history/                                  /history.html              301   <- removed: caused a redirect loop on Cloudflare
 /mountain-view-history-timeline            /timeline.html             301
 /mountain-view-history-timeline/           /timeline.html             301
 /castro-city-rengstorff-park               /castro-legacy.html        301
@@ -26,22 +26,22 @@
 /useful_links/                             /links.html                301
 /video-gallery                             /videos.html               301
 /video-gallery/                            /videos.html               301
-/events                                    /events.html               301
-/events/                                   /events.html               301
+# /events                                    /events.html               301   <- removed: caused a redirect loop on Cloudflare
+# /events/                                   /events.html               301   <- removed: caused a redirect loop on Cloudflare
 /events/page/*                             /events.html               301
 /eventbrite-event/*                        /events.html               301
 /oldest-living-resident                    /oldest-resident.html      301
 /oldest-living-resident/                   /oldest-resident.html      301
 /get-involved                              /join.html                 301
 /get-involved/                             /join.html                 301
-/donate                                    /donate.html               301
-/donate/                                   /donate.html               301
+# /donate                                    /donate.html               301   <- removed: caused a redirect loop on Cloudflare
+# /donate/                                   /donate.html               301   <- removed: caused a redirect loop on Cloudflare
 /memberships                               /membership.html           301
 /memberships/                              /membership.html           301
-/volunteer                                 /volunteer.html            301
-/volunteer/                                /volunteer.html            301
-/newsletters                               /newsletters.html          301
-/newsletters/                              /newsletters.html          301
+# /volunteer                                 /volunteer.html            301   <- removed: caused a redirect loop on Cloudflare
+# /volunteer/                                /volunteer.html            301   <- removed: caused a redirect loop on Cloudflare
+# /newsletters                               /newsletters.html          301   <- removed: caused a redirect loop on Cloudflare
+# /newsletters/                              /newsletters.html          301   <- removed: caused a redirect loop on Cloudflare
 /archived-newsletters                      /newsletters.html          301
 /archived-newsletters/                     /newsletters.html          301
 /contact-us                                /contact.html              301
