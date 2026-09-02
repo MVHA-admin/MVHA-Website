@@ -1,8 +1,6 @@
 {
   "_comment": "Events. Add upcoming events to 'upcoming' and move them to 'past' once they have happened. 'date' must be YYYY-MM-DD. 'endDate' is optional. 'registerUrl' is optional — leave it as an empty string to hide the Register button. The page sorts by date automatically and will move an event out of 'upcoming' on screen once the date passes, so you don't have to do it the same day.",
-
   "registrationUrl": "https://www.eventbrite.com/o/mountain-view-historical-association-10030194297",
-
   "upcoming": [
     {
       "id": "sharing-the-spirit-2026",
@@ -16,21 +14,140 @@
       "image": "https://www.mountainviewhistorical.org/wp-content/uploads/2026/07/MtView_Spirit76_9Aug26_Flyer-791x1024.jpeg"
     }
   ],
-
   "past": [
-    { "id": "walking-tour-2026-07", "title": "Walking Tour of Historic Downtown Mountain View", "date": "2026-07-26", "venue": "Centennial Plaza", "address": "600 West Evelyn Avenue, Mountain View, CA 94041" },
-    { "id": "walking-tour-2026-06", "title": "Walking Tour of Historic Downtown Mountain View", "date": "2026-06-28", "venue": "Centennial Plaza", "address": "600 West Evelyn Avenue, Mountain View, CA 94041" },
-    { "id": "walking-tour-2026-04", "title": "Walking Tour of Historic Downtown Mountain View", "date": "2026-04-26", "venue": "Centennial Plaza", "address": "600 West Evelyn Avenue, Mountain View, CA 94041" },
-    { "id": "walking-tour-2026-02", "title": "Walking Tour of Historic Downtown Mountain View", "date": "2026-02-22", "venue": "Centennial Plaza", "address": "600 West Evelyn Avenue, Mountain View, CA 94041" },
-    { "id": "italians-of-mv", "title": "Winter Quarterly Event: Italians of Mountain View", "date": "2026-02-01", "venue": "Mountain View Public Library", "address": "585 Franklin Street, Mountain View, CA 94041" },
-    { "id": "more-than-orchards", "title": "More than Orchards: Mountain View in Gilded Age America, 1880–1920", "date": "2025-11-02", "venue": "Mountain View Public Library", "address": "585 Franklin Street, Mountain View, CA 94041" },
-    { "id": "walking-tour-2025-10", "title": "Walking Tour of Historic Downtown Mountain View", "date": "2025-10-26", "venue": "Centennial Plaza", "address": "600 West Evelyn Avenue, Mountain View, CA 94041" },
-    { "id": "walking-tour-2025-09", "title": "Walking Tour of Historic Downtown Mountain View", "date": "2025-09-28", "venue": "Centennial Plaza", "address": "600 West Evelyn Avenue, Mountain View, CA 94041" },
-    { "id": "walking-tour-2025-08", "title": "Walking Tour of Historic Downtown Mountain View", "date": "2025-08-24", "venue": "Centennial Plaza", "address": "600 West Evelyn Avenue, Mountain View, CA 94041" },
-    { "id": "disasters-of-mv", "title": "Disasters of Mountain View: Earthquakes, Fires & Airplane Crashes", "date": "2025-08-03", "venue": "The Historic Adobe Building", "address": "157 Moffett Boulevard, Mountain View, CA 94043" },
-    { "id": "walking-tour-2025-03", "title": "Walking Tour of Historic Downtown Mountain View", "date": "2025-03-23", "venue": "Centennial Plaza", "address": "600 West Evelyn Avenue, Mountain View, CA 94041" }
+    {
+      "id": "walking-tour-2026-07",
+      "title": "Walking Tour of Historic Downtown Mountain View",
+      "date": "2026-07-26",
+      "time": "",
+      "venue": "Centennial Plaza",
+      "address": "600 West Evelyn Avenue, Mountain View, CA 94041",
+      "description": "",
+      "registerUrl": "",
+      "image": ""
+    },
+    {
+      "id": "walking-tour-2026-06",
+      "title": "Walking Tour of Historic Downtown Mountain View",
+      "date": "2026-06-28",
+      "time": "",
+      "venue": "Centennial Plaza",
+      "address": "600 West Evelyn Avenue, Mountain View, CA 94041",
+      "description": "",
+      "registerUrl": "",
+      "image": ""
+    },
+    {
+      "id": "walking-tour-2026-04",
+      "title": "Walking Tour of Historic Downtown Mountain View",
+      "date": "2026-04-26",
+      "time": "",
+      "venue": "Centennial Plaza",
+      "address": "600 West Evelyn Avenue, Mountain View, CA 94041",
+      "description": "",
+      "registerUrl": "",
+      "image": ""
+    },
+    {
+      "id": "walking-tour-2026-02",
+      "title": "Walking Tour of Historic Downtown Mountain View",
+      "date": "2026-02-22",
+      "time": "",
+      "venue": "Centennial Plaza",
+      "address": "600 West Evelyn Avenue, Mountain View, CA 94041",
+      "description": "",
+      "registerUrl": "",
+      "image": ""
+    },
+    {
+      "id": "italians-of-mv",
+      "title": "Winter Quarterly Event: Italians of Mountain View",
+      "date": "2026-02-01",
+      "time": "",
+      "venue": "Mountain View Public Library",
+      "address": "585 Franklin Street, Mountain View, CA 94041",
+      "description": "",
+      "registerUrl": "",
+      "image": ""
+    },
+    {
+      "id": "more-than-orchards",
+      "title": "More than Orchards: Mountain View in Gilded Age America, 1880–1920",
+      "date": "2025-11-02",
+      "time": "",
+      "venue": "Mountain View Public Library",
+      "address": "585 Franklin Street, Mountain View, CA 94041",
+      "description": "",
+      "registerUrl": "",
+      "image": ""
+    },
+    {
+      "id": "walking-tour-2025-10",
+      "title": "Walking Tour of Historic Downtown Mountain View",
+      "date": "2025-10-26",
+      "time": "",
+      "venue": "Centennial Plaza",
+      "address": "600 West Evelyn Avenue, Mountain View, CA 94041",
+      "description": "",
+      "registerUrl": "",
+      "image": ""
+    },
+    {
+      "id": "walking-tour-2025-09",
+      "title": "Walking Tour of Historic Downtown Mountain View",
+      "date": "2025-09-28",
+      "time": "",
+      "venue": "Centennial Plaza",
+      "address": "600 West Evelyn Avenue, Mountain View, CA 94041",
+      "description": "",
+      "registerUrl": "",
+      "image": ""
+    },
+    {
+      "id": "walking-tour-2025-08",
+      "title": "Walking Tour of Historic Downtown Mountain View",
+      "date": "2025-08-24",
+      "time": "",
+      "venue": "Centennial Plaza",
+      "address": "600 West Evelyn Avenue, Mountain View, CA 94041",
+      "description": "",
+      "registerUrl": "",
+      "image": ""
+    },
+    {
+      "id": "disasters-of-mv",
+      "title": "Disasters of Mountain View: Earthquakes, Fires & Airplane Crashes",
+      "date": "2025-08-03",
+      "time": "",
+      "venue": "The Historic Adobe Building",
+      "address": "157 Moffett Boulevard, Mountain View, CA 94043",
+      "description": "",
+      "registerUrl": "",
+      "image": ""
+    },
+    {
+      "id": "walking-tour-2025-03",
+      "title": "Walking Tour of Historic Downtown Mountain View",
+      "date": "2025-03-23",
+      "time": "",
+      "venue": "Centennial Plaza",
+      "address": "600 West Evelyn Avenue, Mountain View, CA 94041",
+      "description": "",
+      "registerUrl": "",
+      "image": ""
+    },
+    {
+      "id": "new-website",
+      "title": "Great new website!",
+      "date": "2026-09-22",
+      "time": "1:30pm",
+      "venue": "Mountain View Public Library",
+      "address": "585 Franklin Street, Mountain View, CA 94041",
+      "description": "Come hear about the new website!",
+      "registerUrl": "",
+      "image": "/assets/images/IMG_0091.jpeg"
+    }
   ],
-
   "annual": [
     {
       "title": "Old Mountain View Neighborhood Association Ice Cream Social",
@@ -45,7 +162,6 @@
       "when": "October"
     }
   ],
-
   "archive": [
     {
       "year": 2023,
