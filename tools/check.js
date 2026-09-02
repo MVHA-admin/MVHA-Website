@@ -148,6 +148,25 @@ if (!fs.existsSync(iaPath)) {
 
 /* ---- 5. Newsletter data ---- */
 
+console.log('\nChecking events');
+const events = JSON.parse(fs.readFileSync(path.join(dataDir, 'events.json'), 'utf8'));
+if (events.upcoming || events.past) {
+  warn('data/events.json still has separate "upcoming"/"past" lists — they were merged into "events"');
+}
+const evIds = new Set();
+for (const e of events.events || []) {
+  if (!e.id) fail(`an event has no short name: ${e.title || '(untitled)'}`);
+  else if (evIds.has(e.id)) fail(`two events share the short name "${e.id}"`);
+  else evIds.add(e.id);
+  if (!e.title) fail(`event ${e.id} has no title`);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(e.date || '')) {
+    fail(`event ${e.id} has the date "${e.date}" — it must be written YYYY-MM-DD`);
+  }
+}
+const upcomingCount = (events.events || []).filter(e => e.date >= new Date().toISOString().slice(0, 10)).length;
+console.log(`  ok    ${(events.events || []).length} events, ${upcomingCount} still to come`);
+if (!upcomingCount) warn('nothing is coming up — the events page will show its empty message');
+
 console.log('\nChecking newsletter archive data');
 const news = JSON.parse(fs.readFileSync(path.join(dataDir, 'newsletters.json'), 'utf8'));
 const newsIds = new Set();

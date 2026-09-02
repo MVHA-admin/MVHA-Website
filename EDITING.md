@@ -72,16 +72,31 @@ saved but nothing appears on the website. Untick it when you are ready.
 
 ## Adding an event
 
-**Events → Upcoming events → Add Event.**
+**Events → Events → Add Event.**
+
+There is one list of events and one Add button, at the top. New events go to
+the top of the list, where you can see them.
+
+**There is no separate list for past events.** The website reads the date and
+works out for itself what is still to come, so nothing ever has to be moved
+after an event has happened. Once the date passes, the event drops down into
+"Recent events" on its own, and the Register and calendar buttons stop being
+offered — nobody is invited to sign up for something that is over.
 
 Only three things really matter: the title, the date, and a short name.
 
 The **short name** is an internal label — lower-case letters, numbers and
-hyphens, no spaces. Something like `walking-tour-2026-11`. It never appears
-on the page; it just has to be different from every other event's.
+hyphens, no spaces. Something like `walking-tour-2026-11`. It never appears on
+the page; it just has to be different from every other event's.
 
-**You do not need to move an event to "past" after it happens.** The website
-checks the date and moves it for you. Tidy up whenever it suits you.
+**The description is worth writing properly.** The events list shows the first
+sentence or two; anyone who selects the event sees the whole thing. Leave a
+blank line between paragraphs and the page will lay them out as paragraphs —
+there is no need for any formatting beyond that.
+
+**Add the flyer or a photograph** in "Flyer or photo". It appears beside the
+event in the list and full size when someone opens it. An event without one
+still looks fine, so do not hold up an announcement waiting for artwork.
 
 Leave the registration link empty if there is nothing to register for — the
 Register button then simply does not appear.

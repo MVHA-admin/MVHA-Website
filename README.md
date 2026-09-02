@@ -52,11 +52,40 @@ Server*.
 
 Edit `data/events.json`.
 
-- Add new events to the `upcoming` list.
-- Dates must be written `YYYY-MM-DD` — for example `2026-11-01`.
-- You do **not** need to move an event to `past` on the day it happens. The
-  site checks the date and moves it automatically. Tidy up whenever you like.
-- Leave `registerUrl` as `""` if there is nothing to register for.
+Everything sits in one list, `events`. There is deliberately no separate list
+for past ones: the page reads the date and decides for itself what is still to
+come, sorts upcoming events soonest-first and past ones newest-first, and stops
+offering Register, "Add to calendar" and the map once a date has gone by. So an
+event is written once and never has to be moved.
+
+```json
+{
+  "id": "walking-tour-2026-11",
+  "title": "Walking Tour of Historic Downtown Mountain View",
+  "date": "2026-11-22",
+  "time": "2:00 – 4:00 PM",
+  "venue": "Centennial Plaza",
+  "address": "600 West Evelyn Avenue, Mountain View, CA 94041",
+  "description": "One paragraph.\n\nAnd another.",
+  "registerUrl": "https://www.eventbrite.com/e/...",
+  "image": "https://.../flyer.jpg"
+}
+```
+
+- `id` must be unique. It is the address of the event's own view:
+  `events.html?event=walking-tour-2026-11`.
+- `date` must be `YYYY-MM-DD`. Everything else is optional.
+- `description` is plain text. A blank line starts a new paragraph. The list
+  shows the opening sentence or two and links to the rest.
+- `registerUrl` empty, or missing, hides the Register button.
+
+Each event opens over the list rather than on a page of its own. That is
+deliberate: events are read from this file in the browser so that a change in
+the editing panel shows up without a rebuild, and a page per event would only
+exist after one.
+
+`annual` is the short list of yearly community events, and `archive` is the
+record of earlier quarterly programmes, kept as plain lines of text by year.
 
 ### Photographs
 

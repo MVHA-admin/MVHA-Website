@@ -224,6 +224,27 @@
 
     const photos = ((own && own.photos) || []).concat(((ia && ia.photos) || []).map(fromArchive));
 
+    /* Both files arrive in their own order, and simply putting one after the
+       other looks like no order at all. The gallery is one collection, so it
+       is sorted as one: oldest first, and anything with no date at the end
+       rather than scattered through the middle.
+
+       The year is read out of the date as it is written, because that is the
+       only date these have -- "1906", "June 1917", "circa 1953" and
+       "3 June 1937" all appear, and all of them start being useful at the
+       four digits. Where there is no date at all the decade stands in. */
+    function yearOf(p) {
+      const m = /\d{4}/.exec(p.date || '');
+      if (m) return Number(m[0]);
+      if (typeof p.decade === 'number') return p.decade;
+      return Infinity;
+    }
+    photos.forEach(function (p) { p.year = yearOf(p); });
+    photos.sort(function (a, b) {
+      if (a.year !== b.year) return a.year - b.year;
+      return a.title.localeCompare(b.title);
+    });
+
     const qInput = $('[data-archive-search]');
     const decadeSel = $('[data-archive-decade]');
     const topicSel = $('[data-archive-topic]');
@@ -451,8 +472,15 @@
 
     const today = new Date(); today.setHours(0, 0, 0, 0);
 
-    // Anything in 'upcoming' whose date has passed is treated as past automatically.
-    const all = (data.upcoming || []).concat(data.past || []);
+    /* One list of events, in whatever order it happens to be in. Which of them
+       are still to come is decided here, by the date, so that nobody editing
+       the site has to move an event from one list to another on the morning
+       after it happened.
+
+       'upcoming' and 'past' are the shape the file used to have, and are still
+       read so that an older copy of the data -- or a browser holding one in its
+       cache -- does not empty the page. */
+    const all = (data.events || []).concat(data.upcoming || [], data.past || []);
     const upcoming = all.filter(function (e) { return parseDate(e.date) >= today; })
                         .sort(function (a, b) { return parseDate(a.date) - parseDate(b.date); });
     const past = all.filter(function (e) { return parseDate(e.date) < today; })
@@ -469,6 +497,27 @@
 
     const byId = {};
     all.forEach(function (e) { byId[slugFor(e)] = e; });
+
+    /* Descriptions are written in the editing panel as plain text, with a blank
+       line between paragraphs. That is turned into real paragraphs here rather
+       than asking board members to write HTML. */
+    function paragraphs(text) {
+      return String(text || '').split(/\n\s*\n/)
+        .map(function (para) { return para.trim(); })
+        .filter(Boolean)
+        .map(function (para) { return '<p>' + esc(para).replace(/\n/g, '<br>') + '</p>'; })
+        .join('');
+    }
+
+    /* The list shows the opening of a description; the whole of it is one
+       click away, so there is no sense in repeating it twice on one page. */
+    function openingOf(text, n) {
+      const first = String(text || '').split(/\n\s*\n/)[0].trim();
+      if (first.length <= n) return first;
+      const cut = first.slice(0, n);
+      const stop = cut.lastIndexOf('. ');
+      return stop > n * 0.5 ? cut.slice(0, stop + 1) : cut.replace(/\s+\S*$/, '') + '…';
+    }
 
     function mapUrl(e) {
       const where = [e.venue, e.address].filter(Boolean).join(', ');
@@ -514,7 +563,10 @@
         '<div class="event-body">' +
           '<h3><a href="' + href + '" data-event-open="' + esc(id) + '">' + esc(e.title) + '</a></h3>' +
           '<p class="where">' + esc([e.time, e.venue, e.address].filter(Boolean).join(' \u00b7 ')) + '</p>' +
-          (e.description ? '<p class="desc">' + esc(e.description) + '</p>' : '') +
+          (e.description
+            ? '<p class="desc">' + esc(openingOf(e.description, 180)) +
+              ' <a href="' + href + '" data-event-open="' + esc(id) + '">More about this event &rarr;</a></p>'
+            : '') +
         '</div>' +
         (actions.length ? '<div class="event-actions">' + actions.join('') + '</div>' : '') +
       '</article>';
@@ -590,7 +642,10 @@
           (e.time ? ' \u00b7 ' + e.time : '');
         dTitle.textContent = e.title;
 
-        const map = mapUrl(e);
+        /* A map is worth having for something you are still going to go to.
+           For an event that has already happened the venue is a fact about the
+           past, so it is stated rather than linked. */
+        const map = past ? '' : mapUrl(e);
         const where = esc([e.venue, e.address].filter(Boolean).join(', '));
         dWhere.innerHTML = where
           ? (map ? '<a href="' + map + '" target="_blank" rel="noopener">' + where + '</a>' : where)
@@ -599,12 +654,12 @@
         /* Older entries were kept as a line in a list and never had a
            description. Saying so is better than an empty space. */
         dDesc.innerHTML = e.description
-          ? esc(e.description)
+          ? paragraphs(e.description)
           : (past
-              ? 'We have not kept a description of this one. Several past talks were recorded and are in the ' +
+              ? '<p>We have not kept a description of this one. Several past talks were recorded and are in the ' +
                 '<a href="' + BASE + 'videos.html">video gallery</a>, and most were written up afterwards in ' +
-                '<a href="' + BASE + 'newsletters.html">The Mountain ReView</a>.'
-              : 'Full details to follow.');
+                '<a href="' + BASE + 'newsletters.html">The Mountain ReView</a>.</p>'
+              : '<p>Full details to follow.</p>');
 
         const acts = [];
         if (e.registerUrl && !past) {

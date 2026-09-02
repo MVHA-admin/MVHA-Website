@@ -39,7 +39,12 @@ function check(label, condition, detail) {
   }
 }
 
-async function render(page, query) {
+/* Some of what the site does depends on whether a date has passed: an event
+   stops offering a Register button, a map is no longer useful. Those cannot be
+   tested against the real data file for ever, because every event in it
+   eventually falls into the past. So a test may pass `patch` — a function that
+   is handed each data file as it is loaded and may change it first. */
+async function render(page, query, patch) {
   const url = 'http://localhost/' + page + (query || '');
   const dom = new JSDOM(fs.readFileSync(path.join(ROOT, page), 'utf8'), {
     url,
@@ -56,7 +61,13 @@ async function render(page, query) {
       return Promise.resolve({ ok: false, status: 404, statusText: 'Not Found' });
     }
     const text = fs.readFileSync(file, 'utf8');
-    return Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve(JSON.parse(text)) });
+    return Promise.resolve({
+      ok: true, status: 200,
+      json: () => {
+        const data = JSON.parse(text);
+        return Promise.resolve(patch ? (patch(rel, data) || data) : data);
+      }
+    });
   };
   w.CSS = w.CSS || { escape: s => String(s).replace(/[^a-zA-Z0-9_-]/g, c => '\\' + c) };
   w.URL.createObjectURL = () => 'blob:stub';
@@ -84,6 +95,16 @@ async function render(page, query) {
   check(`shows one screenful, not the lot (${photos.length})`, photos.length === 60);
   check('every photo has an image with alt text',
     [...photos].every(p => p.querySelector('img') && p.querySelector('img').alt));
+  // Only the dates that actually state a year can be compared here: a few read
+  // "19th century" and are placed by their decade, which the page does not show.
+  check('photographs run oldest first',
+    (() => {
+      const years = [...doc.querySelectorAll('[data-gallery] .photo .date')]
+        .map(d => { const m = /\d{4}/.exec(d.textContent); return m ? Number(m[0]) : null; })
+        .filter(y => y !== null);
+      return years.length > 40 && years.every((y, i) => i === 0 || years[i - 1] <= y);
+    })(),
+    [...doc.querySelectorAll('[data-gallery] .photo .date')].slice(0, 6).map(d => d.textContent).join(', '));
   check('thumbnails come from the Internet Archive',
     [...photos].some(p => /archive\.org\/services\/img\//.test(p.querySelector('img').src)));
   check('decade dropdown populated', doc.querySelectorAll('[data-archive-decade] option').length > 8);
@@ -142,30 +163,76 @@ async function render(page, query) {
     doc.querySelectorAll('[data-events-past] [data-event-open]').length > 5);
   check('the detail panel starts closed',
     !doc.querySelector('#event-detail').classList.contains('is-open'));
+  check('the list shows an opening, not the whole description',
+    [...doc.querySelectorAll('.event .desc')].every(p => p.textContent.length < 260),
+    Math.max(...[...doc.querySelectorAll('.event .desc')].map(p => p.textContent.length)) + ' chars');
+  check('and offers the rest',
+    /More about this event/.test(doc.querySelector('.event .desc').textContent));
 
-  console.log('\nEvents — one event in full');
-  doc = await render('events.html', '?event=sharing-the-spirit-2026');
+  // The file used to keep two lists. A browser with the old file still in its
+  // cache should not get an empty page while the new one propagates.
+  const oldShape = (rel, data) => {
+    if (rel !== 'data/events.json') return;
+    const all = data.events || [];
+    delete data.events;
+    data.upcoming = all.slice(0, 1);
+    data.past = all.slice(1);
+  };
+  const legacy = await render('events.html', '', oldShape);
+  check('still understands the two-list file it replaced',
+    legacy.querySelectorAll('.event').length === doc.querySelectorAll('.event').length,
+    legacy.querySelectorAll('.event').length + ' vs ' + doc.querySelectorAll('.event').length);
+
+  console.log('\nEvents — one still to come');
+  // Held forward a year, so this keeps testing the future however long the site
+  // runs. Everything else about the event is left exactly as it is in the data.
+  const nextYear = (rel, data) => {
+    if (rel !== 'data/events.json') return;
+    (data.events || []).forEach(e => {
+      if (e.id === 'sharing-the-spirit-2026') {
+        e.date = (new Date().getFullYear() + 1) + '-08-09';
+      }
+    });
+  };
+  doc = await render('events.html', '?event=sharing-the-spirit-2026', nextYear);
   const ed = doc.querySelector('#event-detail');
   check('opens the panel', ed.classList.contains('is-open'));
   check('names the event', /Sharing the Spirit/.test(doc.querySelector('[data-ed-title]').textContent),
     doc.querySelector('[data-ed-title]').textContent);
   check('gives the date in full', /August/.test(doc.querySelector('[data-ed-when]').textContent),
     doc.querySelector('[data-ed-when]').textContent);
+  check('does not call a future event past',
+    !/^Held on/.test(doc.querySelector('[data-ed-when]').textContent));
   check('links the address to a map',
     /google\.com\/maps/.test(doc.querySelector('[data-ed-where]').innerHTML));
   check('shows the flyer', !doc.querySelector('[data-ed-img]').hidden);
-  check('offers the map', /Open the map/.test(doc.querySelector('[data-ed-actions]').textContent),
+  check('offers Register, calendar and map',
+    ['Register', 'Add to calendar', 'Open the map']
+      .every(t => doc.querySelector('[data-ed-actions]').textContent.includes(t)),
     doc.querySelector('[data-ed-actions]').textContent.trim());
 
+  console.log('\nEvents — one already held');
   doc = await render('events.html', '?event=walking-tour-2026-02');
   check('a past event says it is past',
     /^Held on/.test(doc.querySelector('[data-ed-when]').textContent),
     doc.querySelector('[data-ed-when]').textContent);
+  const noDescription = (rel, data) => {
+    if (rel !== 'data/events.json') return;
+    (data.events || []).forEach(e => { if (e.id === 'walking-tour-2026-02') delete e.description; });
+  };
+  const bare = await render('events.html', '?event=walking-tour-2026-02', noDescription);
   check('says so honestly when no description was kept',
-    /video gallery|Mountain ReView/.test(doc.querySelector('[data-ed-desc]').innerHTML));
+    /video gallery|Mountain ReView/.test(bare.querySelector('[data-ed-desc]').innerHTML),
+    bare.querySelector('[data-ed-desc]').textContent.slice(0, 60));
   check('offers no Register button for something already held',
     !/Register/.test(doc.querySelector('[data-ed-actions]').textContent),
     doc.querySelector('[data-ed-actions]').textContent.trim());
+  check('offers no map to somewhere nobody is going',
+    !/Open the map/.test(doc.querySelector('[data-ed-actions]').textContent) &&
+    !/maps/.test(doc.querySelector('[data-ed-where]').innerHTML));
+  check('lays the description out in paragraphs',
+    doc.querySelectorAll('[data-ed-desc] p').length >= 2,
+    doc.querySelectorAll('[data-ed-desc] p').length + ' paragraphs');
 
   doc = await render('events.html', '?event=not-a-real-event');
   check('an address that names nothing just shows the page',

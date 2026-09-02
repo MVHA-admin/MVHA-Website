@@ -93,7 +93,7 @@ collections:
       - name: events
         label: Events
         file: data/events.json
-        description: Upcoming and past events, the annual community calendar, and the record of earlier quarterly programmes.
+        description: Every event, the annual community calendar, and the record of earlier quarterly programmes.
         fields:
           - name: _comment
             label: Note to editors
@@ -105,40 +105,31 @@ collections:
             widget: string
             hint: Used by the "Register on Eventbrite" buttons.
 
-          - name: upcoming
-            label: Upcoming events
+          - name: events
+            label: Events
             label_singular: Event
             widget: list
             required: false
+            add_to_top: true
+            collapsed: true
             summary: '{{fields.date}} — {{fields.title}}'
-            hint: The site moves an event to "past" on its own once the date has gone by, so there is no rush to tidy up.
+            hint: >-
+              One list, newest first. There is no separate list for past events: the
+              website reads the date and works out for itself what is still to come,
+              so nothing ever has to be moved. New events are added at the top.
             fields:
               - { name: id, label: Short name (no spaces), widget: string, pattern: ['^[a-z0-9-]+$', 'Lower-case letters, numbers and hyphens only'] }
               - { name: title, label: Title, widget: string }
               - { name: date, label: Date, widget: datetime, date_format: 'YYYY-MM-DD', time_format: false, picker_utc: true }
-              - { name: time, label: Time, widget: string, required: false, hint: 'For example: 1:00 – 3:00 PM' }
+              - { name: time, label: Time, widget: string, required: false, hint: 'For example: 2:00 – 4:00 PM' }
               - { name: venue, label: Venue, widget: string, required: false }
               - { name: address, label: Address, widget: string, required: false }
-              - { name: description, label: Description, widget: text, required: false }
-              - { name: registerUrl, label: Registration link, widget: string, required: false, default: '' }
-              - { name: image, label: Flyer or photo, widget: image, required: false }
-
-          - name: past
-            label: Past events
-            label_singular: Event
-            widget: list
-            required: false
-            collapsed: true
-            summary: '{{fields.date}} — {{fields.title}}'
-            fields:
-              - { name: id, label: Short name (no spaces), widget: string }
-              - { name: title, label: Title, widget: string }
-              - { name: date, label: Date, widget: datetime, date_format: 'YYYY-MM-DD', time_format: false, picker_utc: true }
-              - { name: time, label: Time, widget: string, required: false }
-              - { name: venue, label: Venue, widget: string, required: false }
-              - { name: address, label: Address, widget: string, required: false }
-              - { name: description, label: Description, widget: text, required: false }
-              - { name: registerUrl, label: Registration link, widget: string, required: false }
+              - name: description
+                label: Description
+                widget: text
+                required: false
+                hint: Leave a blank line between paragraphs. The events list shows the first sentence or two and links to the rest.
+              - { name: registerUrl, label: Registration link, widget: string, required: false, default: '', hint: 'Leave empty if there is nothing to register for. It is dropped automatically once the date has passed.' }
               - { name: image, label: Flyer or photo, widget: image, required: false }
 
           - name: annual
