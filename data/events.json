@@ -3,6 +3,17 @@
   "registrationUrl": "https://www.eventbrite.com/o/mountain-view-historical-association-10030194297",
   "events": [
     {
+      "id": "2026-nov-meeting",
+      "title": "Quarterly Event - Wineries of Mountain View",
+      "date": "2026-11-01",
+      "time": "2:00-4:00",
+      "venue": "Mountain View Public Library Community Room",
+      "address": "",
+      "description": "",
+      "registerUrl": "",
+      "image": ""
+    },
+    {
       "id": "sharing-the-spirit-2026",
       "title": "Sharing the Spirit: Reflections on America's 250th",
       "date": "2026-08-09",
