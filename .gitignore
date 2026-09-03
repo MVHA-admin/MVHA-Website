@@ -1,6 +1,7 @@
 *.bak
 .DS_Store
 .venv/
+__pycache__/
 node_modules/
 package-lock.json
 

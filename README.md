@@ -198,17 +198,47 @@ where it needs one.
 
 ### Newsletters
 
-Edit `data/newsletters.json` to add an issue: give it an `id`, a `title`, a
-`date` and the `url` of the PDF. Leave `text` and `highlights` empty — the
-indexer fills both in.
+The newsletters live in **two** files, and the split matters:
 
-Each issue has two fields the indexer writes:
+| File | Size | Who writes it |
+| --- | --- | --- |
+| `data/newsletters.json` | ~18 KB | People — by hand, or in the panel at `/admin` |
+| `data/newsletter-text.json` | ~950 KB | `tools/index_newsletters.py`, never by hand |
 
-- **`text`** — everything in the PDF, which is what site search looks through.
-- **`highlights`** — the bullet list of contents shown under the issue on the
-  archive page. The indexer works these out by measuring type size: whatever
-  size most of the page is set in is body copy, anything meaningfully bigger
-  is an article heading.
+`newsletters.json` is the list: `id`, `title`, `date`, `volume`, `url`, `cover`
+and `highlights`. `newsletter-text.json` holds nothing but the words pulled out
+of the PDFs, keyed by the same `id`:
+
+```
+{ "issues": { "summer-2026": { "text": "...", "pages": 12, "words": 4831 } } }
+```
+
+`assets/js/site.js` joins them back together (`joinNewsletterText`) when it
+draws the Newsletters page and when it builds the search index, so the split is
+invisible on the site.
+
+**Why they are split.** A board member adds an issue through `/admin`, and
+Sveltia writes back the whole file from the fields declared in
+`admin/config.yml`. An undeclared field is not guaranteed to survive that round
+trip — and one careless save would have taken 943 KB of extracted text with it.
+Keeping the text in a file the panel never opens makes that impossible. It also
+means the editing form loads in a moment instead of dragging a megabyte of PDF
+text into a browser.
+
+**Adding an issue by hand** is still fine: add an entry to `newsletters.json`
+with an `id`, a `title`, a `date` and the `url` of the PDF, and leave
+`highlights` empty. The indexer fills in the rest. **Do not add `text` there** —
+`tools/check.js` will warn if you do, and the next indexer run moves it across
+anyway.
+
+Each issue gets two things from the indexer:
+
+- **`text`** (in `newsletter-text.json`) — everything in the PDF, which is what
+  site search looks through.
+- **`highlights`** (in `newsletters.json`) — the bullet list of contents shown
+  under the issue on the archive page. The indexer works these out by measuring
+  type size: whatever size most of the page is set in is body copy, anything
+  meaningfully bigger is an article heading.
 
 Headline detection is a good guess, not perfect. Reword or reorder any bullet
 you like — **the indexer never overwrites a `highlights` list that already has
@@ -226,12 +256,32 @@ body copy, and what each of its two methods produced. Usually the answer is
 that the headlines are not set much larger than the body, in which case
 writing three or four bullets by hand is quicker than fighting it.
 
-**Making the newsletters searchable.** Double-click
-`Launchers/Index Newsletters.command`. It reads every PDF, pulls out the text,
-and writes it back into `data/newsletters.json`. After that, searching for a
-family name, a street or a business finds the issue that mentions it and shows
-the passage. The first run also asks the old WordPress site for any issues not
-yet listed, so run it while the old site is still online.
+**Making the newsletters searchable happens by itself.**
+`.github/workflows/index-newsletters.yml` runs the indexer on GitHub's own
+machines whenever `data/newsletters.json` or anything in `assets/newsletters/`
+changes — which is exactly what happens when somebody adds an issue in
+`/admin`. It installs `pypdf`, reads the new PDF, runs `tools/check.js`, and
+commits `data/newsletter-text.json` back. Cloudflare then republishes, and the
+issue is searchable maybe five minutes after it was uploaded.
+
+It also runs weekly, and there is a **Run workflow** button on the repository's
+Actions tab. The commit it makes is pushed with GitHub's own token, and GitHub
+does not start workflow runs from those, so it cannot set itself off in a loop.
+
+Two things to know:
+
+- It needs **Settings → Actions → General → Workflow permissions → "Read and
+  write permissions"**. Without it the run fails at the last step.
+- It commits to `main`, so **Fetch origin before your next commit** or Git will
+  ask you to merge. This is the same as an issue being added in `/admin`.
+
+**Running it yourself** — double-click `Launchers/Index Newsletters.command` —
+is still worth doing when you are working offline, when you want `--diagnose`,
+or for `--discover`, which asks the old WordPress site for issues not yet
+listed. Run that one while the old site is still online.
+
+After indexing, searching for a family name, a street or a business finds the
+issue that mentions it and shows the passage.
 
 This uses Python, which is already on your Mac — no Node required. The first
 run creates a `.venv` folder inside the project holding one small PDF library.
@@ -254,7 +304,16 @@ on — that issue stays listed and readable, it just won't appear in search
 results.
 
 The indexer can read PDFs from your own computer too. Put them in a folder and
-set each issue's `url` to something like `newsletters/Summer-2026.pdf`.
+set each issue's `url` to something like `newsletters/Summer-2026.pdf`. A PDF
+uploaded through `/admin` lands in `assets/newsletters/` and is read from there
+in exactly the same way, once you have pulled the change down.
+
+**An issue added in the panel is readable immediately and searchable within
+about five minutes**, once the Action above has run and Cloudflare has
+republished. In between it shows a "Not yet indexed" note and opens as a plain
+PDF — nothing is lost, it simply does not turn up in search results yet.
+`node tools/check.js` reports the gap: it prints how many issues are listed and
+how many are searchable.
 
 ### Historical directories
 
@@ -481,7 +540,9 @@ data/photos-ia.json             Generated. The Internet Archive catalogue —
                                 run tools/ia/build-photos.js, do not edit.
 data/timeline.json              City timeline. Edit freely.
 data/board.json                 Board of Directors. Edit freely.
-data/newsletters.json           Newsletter issues and their extracted text.
+data/newsletters.json           The list of newsletter issues. Edited in /admin.
+data/newsletter-text.json       Text pulled out of the PDFs, for search.
+                                Generated — never edit by hand.
 data/directory_index.json       188,244 city directory listings, 1870–1968.
 data/pages.json                 Search index for the regular pages.
 

@@ -51,13 +51,14 @@ You stay signed in afterwards, so this is a one-off.
 
 ## What you will see
 
-Four sections down the left-hand side:
+Five sections down the left-hand side:
 
 | Section | What it controls |
 | --- | --- |
 | **News & Stories** | Short articles and announcements on the News page |
 | **Events** | Every event, and the annual community calendar |
 | **Photographs** | The photo archive |
+| **Newsletters** | Every issue of *The Mountain ReView* |
 | **Board of Directors** | The names and biographies on the About page |
 
 Click one, make your changes, and press **Publish** at the top.
@@ -137,6 +138,52 @@ events — and it appears alongside them.
   decade" filter.
 - **Date** — free text, so `circa 1953` and `August 1967` are both fine.
 - **Short name** — as with events, an internal label, lower-case with hyphens.
+
+---
+
+## Adding a newsletter
+
+**Newsletters → The Mountain ReView → Add Issue.** New issues go to the top of
+the list, where you can see them.
+
+1. **Short name** — an internal label, lower-case letters, numbers and hyphens:
+   `fall-2026`. It never appears on the page.
+2. **Title** — `Fall 2026`. The season in the title is what the page files the
+   issue under, so keep to Winter, Spring, Summer and Fall.
+3. **Date published** — the first of the month is fine if you do not know the
+   exact day.
+4. **The PDF** — press the box and drag the newsletter in. It is uploaded and
+   stored with the website, so it does not depend on anywhere else still being
+   there.
+5. **Cover picture** — optional. A picture of the front page. Without one the
+   issue shows a plain card, which looks perfectly respectable.
+6. **What is in this issue** — optional, one line per article. Leave it empty
+   and it fills itself in later (see below).
+
+Press **Publish**. The issue appears on the Newsletters page a minute or two
+later, in the right year, and anybody can read it.
+
+### Searching inside it happens on its own
+
+The website can search inside the newsletters — type a surname and it finds the
+paragraph in the PDF that mentions it. That works because every page of every
+issue has been read and the words pulled out in advance.
+
+**You do not have to do anything to make that happen.** A few minutes after you
+press Publish, the website reads your PDF by itself, makes it searchable, and —
+if you left "What is in this issue" empty — fills in the list of articles from
+the headings it finds. Nothing to run, nobody to ask.
+
+There is a short gap. For the first few minutes the issue is listed and can be
+read, but shows a small **Not yet indexed** note. Come back in ten minutes and
+it will say **Searchable**. If it still says "Not yet indexed" an hour later,
+something did not work — say so, and it can be looked at.
+
+**One kind of issue can never be searched inside**: a PDF made by scanning
+paper, which holds pictures of words rather than the words themselves. Those
+stay listed and still open normally; they simply do not turn up in searches.
+The newsletters from about 2015 onwards are all proper PDFs, so this is
+unlikely to come up.
 
 ---
 

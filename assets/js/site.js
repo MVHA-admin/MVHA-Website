@@ -59,6 +59,20 @@
 
   /** Load a JSON file from /data. Returns null (and warns) on failure. */
   const dataCache = {};
+  /* Puts the extracted text back beside each issue. Used by the Newsletters
+     page and by the site search, which both need the two files as one. */
+  function joinNewsletterText(list, textFile) {
+    const found = (textFile && textFile.issues) || {};
+    (list && list.issues || []).forEach(function (issue) {
+      const extra = found[issue.id];
+      if (!extra) return;
+      if (extra.text) issue.text = extra.text;
+      if (extra.pages) issue.pages = extra.pages;
+      if (extra.words) issue.words = extra.words;
+    });
+    return list;
+  }
+
   async function loadData(name) {
     if (dataCache[name]) return dataCache[name];
     try {
@@ -834,8 +848,16 @@
     const mount = $('[data-newsletters]');
     if (!mount) return;
 
-    const data = await loadData('newsletters');
+    /* Two files, joined by issue id.
+       newsletters.json is the list, and is what the editing panel writes when a
+       board member adds an issue. newsletter-text.json is the text pulled out of
+       each PDF by tools/index_newsletters.py. They are kept apart so that saving
+       in the panel cannot wipe the search index — an issue added there simply has
+       no text yet, and shows as "Not yet indexed" until the indexer has run. */
+    const results = await Promise.all([loadData('newsletters'), loadData('newsletter-text')]);
+    const data = results[0];
     if (!data) { mount.innerHTML = fallbackMessage(); return; }
+    joinNewsletterText(data, results[1]);
 
     // Note: always use parseDate, never new Date('YYYY-MM-DD'). The latter is
     // read as UTC midnight, which lands on 31 December of the previous year in
@@ -1512,6 +1534,10 @@
        the Association's own photographs below, so that a search for a family
        name or a street reaches all thirteen hundred of them. */
     const archiveData = await loadData('photos-ia');
+
+    /* The newsletters' text lives in its own file; join it on before indexing,
+       or a search for a name inside a PDF would find nothing. */
+    joinNewsletterText(newsData, await loadData('newsletter-text'));
 
     // Build one flat index across pages, photographs and timeline milestones.
     const index = [];

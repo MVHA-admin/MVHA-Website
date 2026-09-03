@@ -95,6 +95,27 @@ panel commits to GitHub, which triggers a rebuild — live in a minute or two.
   are derived from titles by pattern, because the IA records carry almost no
   subject headings. `data/photos.json` is separate and stays editable in the
   CMS; the page merges the two and both share one topic vocabulary.
+- **Newsletters live in two files.** `data/newsletters.json` (~18 KB) is the
+  list a board member edits at `/admin`; `data/newsletter-text.json` (~950 KB)
+  holds only the text extracted from the PDFs and is written solely by
+  `tools/index_newsletters.py`. They were split on 3 September 2026 so that
+  adding an issue through the CMS could not wipe the search index — Sveltia
+  rewrites the whole file from the declared fields, and 943 KB of undeclared
+  text was too much to risk. `joinNewsletterText()` in `site.js` rejoins them
+  for the page and the search index; `tools/check.js` warns if text ever
+  reappears in the wrong file. PDFs uploaded through the panel land in
+  `assets/newsletters/` and are recorded as `/assets/newsletters/...`, which
+  the indexer resolves relative to the project.
+- **The indexer runs itself.** `.github/workflows/index-newsletters.yml` fires
+  on any push touching `data/newsletters.json` or `assets/newsletters/**` —
+  i.e. every time somebody adds an issue in `/admin` — installs pypdf, runs
+  `tools/index_newsletters.py`, runs `tools/check.js`, and commits
+  `data/newsletter-text.json` back. No loop: pushes made with `GITHUB_TOKEN`
+  do not start workflow runs. Also weekly, and `workflow_dispatch`. Needs
+  Settings → Actions → General → Workflow permissions → Read and write. The
+  real cost is that the repo gains commits Craig did not make, so he must
+  Fetch in GitHub Desktop before committing — worth repeating, given the
+  13-conflict scare of 2 September.
 - **MVHA already has its own Internet Archive collection.** Worth remembering
   before the directory scans go up — the upload plan in the Castro Street
   project assumed `opensource` was the only option.

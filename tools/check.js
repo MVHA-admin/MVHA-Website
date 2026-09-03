@@ -169,6 +169,22 @@ if (!upcomingCount) warn('nothing is coming up — the events page will show its
 
 console.log('\nChecking newsletter archive data');
 const news = JSON.parse(fs.readFileSync(path.join(dataDir, 'newsletters.json'), 'utf8'));
+
+/* The extracted text lives in its own file so the editing panel cannot wipe it.
+   Join the two here the same way the browser does, then check as before. */
+const textPath = path.join(dataDir, 'newsletter-text.json');
+const newsText = fs.existsSync(textPath)
+  ? (JSON.parse(fs.readFileSync(textPath, 'utf8')).issues || {})
+  : (warn('data/newsletter-text.json is missing — no newsletter will be searchable inside'), {});
+
+if (news.issues.some(i => i.text)) {
+  warn('data/newsletters.json contains extracted text — it belongs in newsletter-text.json');
+}
+const orphans = Object.keys(newsText).filter(id => !news.issues.some(i => i.id === id));
+if (orphans.length) {
+  warn(`newsletter-text.json has text for ${orphans.length} issue(s) no longer listed: ${orphans.join(', ')}`);
+}
+
 const newsIds = new Set();
 let fullText = 0;
 const unindexed = [];
@@ -178,7 +194,8 @@ for (const i of news.issues) {
   newsIds.add(i.id);
   if (!i.url) fail(`issue ${i.id} has no url`);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(i.date || '')) fail(`issue ${i.id} has a bad date (need YYYY-MM-DD)`);
-  if (i.text && i.text.length > 200) fullText++; else unindexed.push(i.title);
+  const extracted = (newsText[i.id] || {}).text || '';
+  if (extracted.length > 200) fullText++; else unindexed.push(i.title);
 }
 const noBullets = news.issues.filter(i => !(i.highlights || []).length).map(i => i.title);
 console.log(`  ok    ${news.issues.length} issues listed, ${fullText} full-text searchable, ` +

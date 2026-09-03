@@ -21,6 +21,7 @@ node_modules
 
 # Housekeeping.
 .git
+.github
 .gitignore
 .gitattributes
 .DS_Store

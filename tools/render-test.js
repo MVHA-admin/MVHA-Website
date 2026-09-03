@@ -259,9 +259,15 @@ async function render(page, query, patch) {
   console.log('\nNewsletter archive');
   // Assert against the data file rather than hard-coded counts, so these tests
   // stay honest as issues are added and indexed.
+  // The list of issues and the text extracted from their pages live in two
+  // files: newsletters.json is the short list a collaborator edits in /admin,
+  // newsletter-text.json is the much larger file the indexer writes. The page
+  // joins them, so the tests have to as well.
   const newsData = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/newsletters.json'), 'utf8'));
+  const newsText = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/newsletter-text.json'), 'utf8'));
   const expectedIssues = newsData.issues.length;
-  const expectedSearchable = newsData.issues.filter(i => (i.text || '').length > 200).length;
+  const expectedSearchable = newsData.issues
+    .filter(i => ((newsText.issues[i.id] || {}).text || '').length > 200).length;
 
   doc = await render('newsletters.html');
   const issues = doc.querySelectorAll('[data-newsletters] .issue');
@@ -326,6 +332,32 @@ async function render(page, query, patch) {
       const y = sec.querySelector('.issue-year-head').textContent.trim().slice(0, 4);
       return [...sec.querySelectorAll('.issue-body h3')].every(h => h.textContent.trim().endsWith(y));
     }));
+
+  // What a board member sees the minute after they add an issue in /admin:
+  // listed and readable, but not yet in the search index.
+  const fresh = await render('newsletters.html', '', (rel, data) => {
+    if (rel === 'data/newsletters.json') {
+      data.issues.unshift({
+        id: 'fall-2026', title: 'Fall 2026', date: '2026-10-01',
+        volume: 'Volume XV, Issue 4',
+        url: '/assets/newsletters/Mountain-ReView-Fall-2026.pdf',
+        highlights: ['A brand new article']
+      });
+    }
+  });
+  const added = [...fresh.querySelectorAll('[data-newsletters] .issue')]
+    .find(el => /Fall 2026/.test(el.textContent));
+  check('a newly added issue appears straight away', !!added);
+  check('and is honest that it is not searchable yet',
+    !!added && !!added.querySelector('.tag') && !added.querySelector('.tag--on'),
+    added && added.querySelector('.tag') && added.querySelector('.tag').textContent);
+  check('and still offers the PDF to read',
+    !!added && /\.pdf/i.test(added.innerHTML));
+  check('the note on the page says how many are searchable',
+    /39 can be searched inside so far/.test(
+      fresh.querySelector('[data-newsletter-note]') ?
+        fresh.querySelector('[data-newsletter-note]').textContent :
+        fresh.body.textContent));
 
   console.log('\nNewsletter full-text search');
   doc = await render('search.html', '?q=vonnegut');

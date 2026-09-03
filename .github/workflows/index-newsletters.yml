@@ -1,0 +1,89 @@
+# ==========================================================================
+# Make a newly added newsletter searchable, without anyone doing anything.
+# --------------------------------------------------------------------------
+# When a board member adds an issue in the editing panel at /admin, the panel
+# saves two things to this repository: the PDF, and a new entry in
+# data/newsletters.json. The issue is then listed on the website and can be
+# read — but the site cannot search *inside* it until the words have been
+# pulled out of the PDF.
+#
+# That is this file's whole job. GitHub notices the change, reads the PDF,
+# writes the text into data/newsletter-text.json and commits it back. A minute
+# or two later Cloudflare republishes and the issue is searchable.
+#
+# Nobody has to open a Terminal, and nobody has to remember.
+#
+# WHAT TO KNOW IF SOMETHING LOOKS WRONG
+#   * Watch it run: the Actions tab of the repository on GitHub.
+#   * Run it by hand: Actions -> Index newsletters -> Run workflow.
+#   * It needs write permission. If it fails saying so, the setting is
+#     Settings -> Actions -> General -> Workflow permissions ->
+#     "Read and write permissions".
+#   * A scanned issue with no text in it cannot be indexed. The run still
+#     succeeds and says so; the issue stays listed and still opens as a PDF.
+#   * This commits to the repository, so pull (Fetch origin in GitHub Desktop)
+#     before your next commit or Git will ask you to merge.
+#
+# The commit made here is pushed with GitHub's own token, and GitHub
+# deliberately does not start a new workflow run from such a push — so this
+# cannot set itself off in a loop.
+# ==========================================================================
+
+name: Index newsletters
+
+on:
+  # Whenever the list of issues or the uploaded PDFs change.
+  push:
+    branches: [main]
+    paths:
+      - 'data/newsletters.json'
+      - 'assets/newsletters/**'
+
+  # A weekly safety net, in case a run was missed or a PDF arrived a moment
+  # after the entry that referred to it. Sunday, early morning.
+  schedule:
+    - cron: '17 11 * * 0'
+
+  # And a button, on the Actions tab.
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Never two at once — they would both try to write the same file.
+concurrency:
+  group: index-newsletters
+  cancel-in-progress: false
+
+jobs:
+  index:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the site
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install the PDF reader
+        run: pip install --quiet pypdf
+
+      - name: Read any newly added newsletters
+        run: python3 tools/index_newsletters.py
+
+      - name: Check the site data still makes sense
+        run: node tools/check.js
+
+      - name: Save the result
+        run: |
+          if git diff --quiet -- data/newsletters.json data/newsletter-text.json; then
+            echo "Nothing new to index — every issue is already searchable."
+            exit 0
+          fi
+          git config user.name  "MVHA newsletter indexer"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/newsletters.json data/newsletter-text.json
+          git commit -m "Index the newsletters so they can be searched"
+          git push

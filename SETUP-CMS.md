@@ -386,6 +386,29 @@ seen any of this and does not mention GitHub, JSON or builds at all.
 
 ---
 
+## Step 7 — Let the newsletter indexer write
+
+This is one switch, and it only matters for newsletters.
+
+When somebody adds an issue of *The Mountain ReView* in the panel, the website
+reads the PDF and makes it searchable by itself. That work is done by GitHub,
+which means GitHub has to be allowed to save the result back.
+
+**GitHub → the repository → Settings → Actions → General.**
+
+Scroll to **Workflow permissions** and choose **Read and write permissions**.
+Press **Save**.
+
+That is all. To see it working, go to the **Actions** tab after somebody adds
+an issue: there will be a run called *Index newsletters*. The same tab has a
+**Run workflow** button if you ever want to set it off by hand.
+
+If the setting is left alone, everything else still works — the issue is listed
+and readable — but it stays marked "Not yet indexed", and the run on the
+Actions tab fails at its last step with a permissions error.
+
+---
+
 ## If something does not work
 
 **"Not Found" or a blank page at /admin.**
